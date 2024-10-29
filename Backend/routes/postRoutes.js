@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const postController = require('../controllers/postController');
 const authMiddleware = require('../middleware/auth'); // Middleware to check if user is authenticated
-
+const upload = require('../middleware/multerConfig'); // Middleware to handle file uploads
 // Create a new post (protected route)
-router.post('/', authMiddleware, postController.createPost);
+router.post('/create',upload.single('image'), authMiddleware, postController.createPost);
 
 // Get all posts (public route)
 router.get('/', postController.getAllPosts);

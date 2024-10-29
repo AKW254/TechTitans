@@ -3,10 +3,12 @@ const Post = require('../models/post');
 // Create a new post
 exports.createPost = async (req, res) => {
   try {
-    const { title, content } = req.body;
+    const { title, content} = req.body;
+    const { image } =req.file.filename;
     const post = new Post({
       title,
       content,
+      image,
       user: req.user.id // Assume user is attached to request after auth middleware
     });
     await post.save();
