@@ -16,3 +16,22 @@ body {
         cursor: pointer;
         transition: background-color 0.3s ease;
     }
+    /* Body */
+    .main-content {
+        padding-bottom: 86px; /* Adjust the value to the height of your footer */
+      }
+
+    /*Footer*/
+    .footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #f8f9fa; /* Optional background color */
+        z-index: 1;
+        padding: 1rem 0; /* Footer padding */
+        color: black;
+      }
+      
+   
+      

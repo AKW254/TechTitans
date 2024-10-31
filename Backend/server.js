@@ -10,7 +10,6 @@ app.use(bodyParser.json());
 app.use(cors()); // Allow requests from React frontend
 
 // MongoDB connection
-// MongoDB connection
 mongoose.connect('mongodb://localhost/TechTitans').then(() => {
   console.log('Connected to MongoDB');
 }).catch((err) => {
