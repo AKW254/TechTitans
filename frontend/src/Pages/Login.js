@@ -1,37 +1,39 @@
-import React from 'react'
-import { useState } from 'react';
+
+import  React ,{ useState } from 'react';
 import axios from 'axios';  
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; 
+import { useAuth } from '../context/AuthContext';
 
 function Login() {
-  /*Declare variable and their states*/
-  const[email,setEmail]=useState('');
-  const[password,setPassword]=useState('');
-  const login = useAuth();
-  const navigate = useNavigate();
-
-  //Login function
-  const handleLogin=async(e)=>{
+   /*Declare variable and their states*/
+   const[email,setEmail]=useState('');
+   const[password,setPassword]=useState('');
+   const { login } = useAuth();
+   const navigate = useNavigate();
+ 
+   //Login function
+   const handleLogin = async (e) => {
     e.preventDefault();
-    try{
-      const response=await axios.post('http://localhost:3001/api/auth/login', {
-        email,
-        password
-      });
+    try {
+      const response = await axios.post(
+        'http://localhost:3001/api/auth/login',
+        { email, password },
+        { withCredentials: true } // Enables sending/receiving cookies
+      );
   
+      // Update authentication states and show success message
+      login({ username: response.data.username }); // Optionally pass user data
       toast.success(response.data.message);
-      login(response.data.user); // Example of setting user data in context
-      navigate('/'); // Redirect to home after login
-    }catch(err){
+  
+      // Redirect after successful login
+      navigate('/');
+    } catch (err) {
       toast.error(err.response?.data?.message || 'An error occurred');
     }
-  }
-
-
+  };
+  
   return (
-    <>
     <div className="container">
       <div className="row justify-content-center">
         <div className="col-sm-12 col-md-6 col-xl-8">
@@ -62,7 +64,6 @@ function Login() {
         </div>
       </div>
     </div>
-    </>
   )
 }
 

@@ -1,5 +1,5 @@
 const User = require('../models/user');
-const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 
 
 exports.register = async (req, res) => {
@@ -27,19 +27,43 @@ exports.register = async (req, res) => {
   
 /*Login */
 exports.login = async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-  if (!user || !(await user.comparePassword(password))) {
-    return res.status(401).json({ message: 'Invalid credentials' });
-  }else{
-     // Set HTTP-only cookie
-     res.cookie('sessionId', user.sessionId, { httpOnly: true, secure: true, sameSite: 'strict' });
-     return res.json({ message: 'Login successful' });
+  try {
+    const { email, password } = req.body;
+
+    // Find user by email
+    const user = await User.findOne({ email });
+    if (!user || !(await user.comparePassword(password))) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    // Generate a session token (JWT) or use an existing session ID
+    const sessionId = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: '1d',
+    });
+
+    // Set secure cookie if in production
+    res.cookie('sessionId', sessionId, {
+      httpOnly: true,
+      secure : process.env.NODE_ENV === 'production', // Only secure in production
+      sameSite: 'strict',
+      maxAge: 24 * 60 * 60 * 1000, // 1-day expiration
+    });
+
+    return res.json({ message: 'Login successful' });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
 /*Logout */
 exports.logout = (req, res) => {
-  res.clearCookie('sessionId', { httpOnly: true, secure: true, sameSite: 'strict' });
+  // Clear the sessionId cookie
+  res.clearCookie('sessionId', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production', // Only secure in production
+    sameSite: 'strict',
+  });
+
   res.json({ message: 'Logout successful' });
 };

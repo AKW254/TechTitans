@@ -5,13 +5,17 @@ import Header from '../components/Header'
 import Breadcrumb from '../components/Breadcrumb'
 import Cards from '../components/Cards'
 import Footer from '../components/Footer'
+import { AuthProvider } from '../context/AuthContext';
 function Home() {
   return (
     <div className="container">
-    <Header />
+      <AuthProvider>
+      <Header />
     <Breadcrumb />
     <Cards />
     <Footer />
+      </AuthProvider>
+    
   
   </div>
   )

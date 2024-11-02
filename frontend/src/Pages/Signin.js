@@ -3,8 +3,10 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
+
 function Signin() {
   // Declare variable and their states
+
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,13 +25,14 @@ function Signin() {
 
     try {
       // Send registration data to the server
-      const response = await axios.post('http://localhost:3001//api/auth/register', {
+      const response = await axios.post('http://localhost:3001/api/auth/register', {
         username,
         email,
         password,
       });
 
       // Show success message and navigate to login page
+    
       toast.success(response.data.message);
       navigate('/login');
     } catch (error) {
