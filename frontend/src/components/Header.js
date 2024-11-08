@@ -1,14 +1,16 @@
-import React from 'react';
-import '../App.css';
-import { useAuth } from '../context/AuthContext';
+import React from "react";
+import "../App.css";
+import { useAuth } from "../context/AuthContext";
 
 const Header = () => {
   const { isAuthenticated, username, logout } = useAuth(); // Destructure username and logout
-
+  
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
-        <a className="navbar-brand" href="/">Tech Titans</a>
+        <a className="navbar-brand" href="/">
+          Tech Titans
+        </a>
         <button
           className="navbar-toggler"
           type="button"
@@ -21,10 +23,12 @@ const Header = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarScroll">
-          <ul className="navbar-nav me-auto">
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             {isAuthenticated && (
               <li className="nav-item">
-                <a className="nav-link" href="/create-post">Create Post</a>
+                <a className="nav-link active" href="/create-post">
+                  Create Post
+                </a>
               </li>
             )}
           </ul>

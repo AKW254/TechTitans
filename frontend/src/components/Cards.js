@@ -10,7 +10,7 @@ function Cards() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/auth/posts');
+        const response = await axios.get('http://localhost:3001/api/posts');
 
         // Check if posts are present in the response
         if (response.data && Array.isArray(response.data)) {

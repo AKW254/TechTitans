@@ -49,7 +49,11 @@ exports.login = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000, // 1-day expiration
     });
 
-    return res.json({ message: 'Login successful' });
+    return res.json({
+      message: "Login successful",
+      user: { username: user.username },
+    });
+
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ message: 'Server error' });

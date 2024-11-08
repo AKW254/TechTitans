@@ -6,6 +6,8 @@ const upload = require('../middleware/multerConfig'); // Middleware to handle fi
 // Create a new post (protected route)
 router.post('/create',upload.single('image'), authMiddleware, postController.createPost);
 
+//Home Page
+router.get('/home',authMiddleware,postController.getAllPosts);
 // Get all posts (public route)
 router.get('/', postController.getAllPosts);
 

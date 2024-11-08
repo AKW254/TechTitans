@@ -1,20 +1,21 @@
-import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import { BrowserRouter as Router } from 'react-router-dom';
-import Routers from './components/Routers';
-import { AuthProvider } from './context/AuthContext';
+// src/App.js
+import React from "react";
+import { BrowserRouter as Router } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';  // Add the CSS import
+import Routers from "./components/Routers";
+import { AuthProvider } from "./context/AuthContext";
 
 
 const App = () => {
   return (
     <AuthProvider>
- <Router>
-   <Routers />
-    </Router>
+      <Router>
+        <Routers />
+        <ToastContainer /> {/* Make sure it's here */}
+      </Router>
     </AuthProvider>
-   
- 
-  );};
+  );
+};
 
 export default App;
