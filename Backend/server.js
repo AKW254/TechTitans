@@ -1,32 +1,40 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const bodyParser = require('body-parser');
+const path = require("path");
+const express = require("express");
+const dotenv = require("dotenv");
+const connectDB = require("./config/db.js");
+const cookieParser = require("cookie-parser");
+const { notFound, errorHandler } = require("./middleware/errorMiddleware.js");
+const userRoutes = require("./routes/userRoutes.js");
+
+dotenv.config();
+
+const port = process.env.PORT || 5000;
+
+connectDB();
 
 const app = express();
 
-// Middleware
-app.use(bodyParser.json());
-// Allow requests from http://localhost:3000
-app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true // Allow cookies to be included in requests
-}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// MongoDB connection
-mongoose.connect('mongodb://localhost/TechTitans').then(() => {
-  console.log('Connected to MongoDB');
-}).catch((err) => {
-  console.error('Failed to connect to MongoDB', err);
-});
-// Routes
-const authRoutes = require('./routes/authRoutes');
-const postRoutes = require('./routes/postRoutes');
+app.use(cookieParser());
 
-app.use('/api/auth', authRoutes);
-app.use('/api/posts', postRoutes);
+app.use("/api/users", userRoutes);
 
-const port = process.env.PORT || 500;
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
+if (process.env.NODE_ENV === "production") {
+  const __dirname = path.resolve();
+  app.use(express.static(path.join(__dirname, "/frontend/dist")));
+
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"))
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running....");
+  });
+}
+
+app.use(notFound);
+app.use(errorHandler);
+
+app.listen(port, () => console.log(`Server started on port ${port}`));

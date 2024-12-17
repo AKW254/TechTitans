@@ -10,7 +10,13 @@ function Cards() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/posts');
+        const response = await axios.get(
+          `http://localhost:${
+            [3001, 500].includes(parseInt(window.location.port))
+              ? window.location.port
+              : 3001
+          }/api/posts`
+        );
 
         // Check if posts are present in the response
         if (response.data && Array.isArray(response.data)) {

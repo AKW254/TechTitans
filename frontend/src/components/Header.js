@@ -1,10 +1,32 @@
-import React from "react";
-import "../App.css";
+import React, { useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
+import axios from "axios";
 
 const Header = () => {
-  const { isAuthenticated, username, logout } = useAuth(); // Destructure username and logout
-  
+  const { isAuthenticated, username, login, logout } = useAuth(); // Destructure from context
+
+  // Check session on mount using useEffect
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:${[3001, 500].includes(parseInt(window.location.port)) ? window.location.port : 3001}/api/auth/checksession",
+          {
+            withCredentials: true, // This ensures cookies are sent along with the request
+          }
+        );
+        if (response.data.user) {
+          console.log("User is authenticated:", response.data.user);
+          login(response.data.user); // Update auth state with the user data
+        }
+      } catch (error) {
+        console.error("No active session or invalid token", error);
+      }
+    };
+
+    checkSession();
+  }, [login]); // Include `login` as a dependency to ensure it’s properly invoked
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
@@ -26,7 +48,7 @@ const Header = () => {
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             {isAuthenticated && (
               <li className="nav-item">
-                <a className="nav-link active" href="/create-post">
+                <a className="nav-link active" href="/createpost">
                   Create Post
                 </a>
               </li>

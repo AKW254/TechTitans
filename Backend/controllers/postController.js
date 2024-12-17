@@ -3,20 +3,26 @@ const Post = require('../models/post');
 // Create a new post
 exports.createPost = async (req, res) => {
   try {
-    const { title, content} = req.body;
-    const { image } =req.file.filename;
+    const { title, content } = req.body;
+
+    // Access filename directly from req.file and handle missing file scenario
+    const image = req.file ? req.file.filename : null;
+
     const post = new Post({
       title,
       content,
       image,
-      user: req.user.id // Assume user is attached to request after auth middleware
+      user: req.user.id, // Assuming `req.user.id` exists after authentication
     });
+
     await post.save();
-    res.status(201).json({ message: 'Post created successfully', post });
+    res.status(201).json({ message: "Post created successfully", post });
   } catch (error) {
-    res.status(500).json({ message: 'Error creating post', error });
+    console.error("Error creating post:", error);
+    res.status(500).json({ message: "Error creating post", error });
   }
 };
+
 
 // Get all posts
 exports.getAllPosts = async (req, res) => {
