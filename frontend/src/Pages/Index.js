@@ -1,24 +1,16 @@
-import React from 'react'
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import Header from '../components/Header'
-import Breadcrumb from '../components/Breadcrumb'
-import Cards from '../components/Cards'
-import Footer from '../components/Footer'
+import React from "react";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import Main from "../components/Main";
 
 function Index() {
   return (
-    <div className="container">
-     
-    <Header />
-    <Breadcrumb />
-    <Cards />
-    <Footer />
-     
-    
-  
-  </div>
-  )
+    <>
+      <Header />
+      <Main />
+      <Footer />
+    </>
+  );
 }
 
 export default Index;

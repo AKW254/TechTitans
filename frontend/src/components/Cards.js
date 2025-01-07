@@ -1,87 +1,196 @@
-import React, { useEffect, useState } from 'react';
-import '../App.css';
-import axios from 'axios';
+import React from 'react';
+
+
 
 function Cards() {
-  const [posts, setPosts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:${
-            [3001, 500].includes(parseInt(window.location.port))
-              ? window.location.port
-              : 3001
-          }/api/posts`
-        );
-
-        // Check if posts are present in the response
-        if (response.data && Array.isArray(response.data)) {
-          setPosts(response.data); // Assuming the posts are directly in response.data
-        } else {
-         
-          setPosts([]); // Set posts to an empty array if no posts are found
-        }
-      } catch (err) {
-        // Set detailed error message in state
-        if (axios.isAxiosError(err)) {
-          const errorMessage = err.response?.data?.message || err.message || 'Error fetching posts';
-          setError(errorMessage); // Display API error message or Axios error message
-          
-        } else {
-          setError('Unexpected error occurred');
-          
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchPosts();
-  }, []);
-
-  if (isLoading) return (
-    <div className="loader">
-      <div className="blob"></div>
-    </div>
-  );
-
-  if (error) return (
-    <div className="container d-flex flex-column justify-content-center align-items-center vh-90">
-      <img src="images/Search-rafiki.svg" className="img-fluid mt-4" alt="No Post Available" style={{ maxWidth: '400px' }} />
-      <h5 className="text-center fw-bolder">Error has occurred</h5>
-    </div>
-  );
+  
 
   return (
-    <div className="main-content">
-      <div className="row row-cols-1 row-cols-md-3 g-4">
-        {posts.length === 0 ? (
-          <div className="container d-flex flex-column justify-content-center align-items-center vh-90">
-            <img src="images/Search-rafiki.svg" className="img-fluid mt-4" alt="No Post Available" style={{ maxWidth: '400px' }} />
-            <h5 className="text-center fw-bolder">No Post Available.</h5>
-          </div>
-        ) : (
-          posts.map((post) => (
-            <div className="col" key={post._id}>
-              <div className="card h-100">
-                <img src={post.image} className="card-img-top" alt={post.title} />
-                <div className="card-body">
-                  <h5 className="card-title">{post.title}</h5>
-                  <p className="card-text">{post.content}</p>
+    <>
+      <div className="container">
+        <div className="row">
+          <div className="col-lg-6 col-md-6 mb-5">
+            <div className="blog-item">
+              <img
+                src="images/blog/1.jpg"
+                alt=""
+                className="img-fluid rounded"
+              />
+
+              <div className="blog-item-content bg-white p-5">
+                <div className="blog-item-meta bg-gray py-1 px-2">
+                  <span className="text-muted text-capitalize mr-3">
+                    <i className="ti-pencil-alt mr-2"></i>Creativity
+                  </span>
+                  <span className="text-muted text-capitalize mr-3">
+                    <i className="ti-comment mr-2"></i>5 Comments
+                  </span>
+                  <span className="text-black text-capitalize mr-3">
+                    <i className="ti-time mr-1"></i> 28th January
+                  </span>
                 </div>
-                <div className="card-footer">
-                  <small className="text-muted">Last updated 3 mins ago</small>
-                </div>
+
+                <h3 className="mt-3 mb-3">
+                  <a href="blog-single.html">Improve design with typography?</a>
+                </h3>
+                <p className="mb-4">
+                  Non illo quas blanditiis repellendus laboriosam minima animi.
+                  Consectetur accusantium pariatur repudiandae!
+                </p>
+
+                <a
+                  href="blog-single.html"
+                  className="btn btn-small btn-main btn-round-full"
+                >
+                  Learn More
+                </a>
               </div>
             </div>
-          ))
-        )}
+          </div>
+
+          <div className="col-lg-6 col-md-6 mb-5">
+            <div className="blog-item">
+              <img
+                src="images/blog/2.jpg"
+                alt=""
+                className="img-fluid rounded"
+              />
+
+              <div className="blog-item-content bg-white p-5">
+                <div className="blog-item-meta bg-gray py-1 px-2">
+                  <span className="text-muted text-capitalize mr-3">
+                    <i className="ti-pencil-alt mr-2"></i>Design
+                  </span>
+                  <span className="text-muted text-capitalize mr-3">
+                    <i className="ti-comment mr-2"></i>5 Comments
+                  </span>
+                  <span className="text-black text-capitalize mr-3">
+                    <i className="ti-time mr-1"></i> 28th January
+                  </span>
+                </div>
+
+                <h3 className="mt-3 mb-3">
+                  <a href="blog-single.html">Interactivity connect consumer</a>
+                </h3>
+                <p className="mb-4">
+                  Non illo quas blanditiis repellendus laboriosam minima animi.
+                  Consectetur accusantium pariatur repudiandae!
+                </p>
+
+                <a
+                  href="blog-single.html"
+                  className="btn btn-small btn-main btn-round-full"
+                >
+                  Learn More
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-lg-6 col-md-6 mb-5">
+            <div className="blog-item">
+              <img
+                src="images/blog/3.jpg"
+                alt=""
+                className="img-fluid rounded"
+              />
+
+              <div className="blog-item-content bg-white p-5">
+                <div className="blog-item-meta bg-gray py-1 px-2">
+                  <span className="text-muted text-capitalize mr-3">
+                    <i className="ti-pencil-alt mr-2"></i>Community
+                  </span>
+                  <span className="text-muted text-capitalize mr-3">
+                    <i className="ti-comment mr-2"></i>5 Comments
+                  </span>
+                  <span className="text-black text-capitalize mr-3">
+                    <i className="ti-time mr-1"></i> 28th January
+                  </span>
+                </div>
+
+                <h3 className="mt-3 mb-3">
+                  <a href="blog-single.html">
+                    Marketing Strategy to bring more affect
+                  </a>
+                </h3>
+                <p className="mb-4">
+                  Non illo quas blanditiis repellendus laboriosam minima animi.
+                  Consectetur accusantium pariatur repudiandae!
+                </p>
+
+                <a
+                  href="blog-single.html"
+                  className="btn btn-small btn-main btn-round-full"
+                >
+                  Learn More
+                </a>
+              </div>
+            </div>
+          </div>
+          <div className="col-lg-6 col-md-6 mb-5">
+            <div className="blog-item">
+              <img
+                src="images/blog/4.jpg"
+                alt=""
+                className="img-fluid rounded"
+              />
+
+              <div className="blog-item-content bg-white p-5">
+                <div className="blog-item-meta bg-gray py-1 px-2">
+                  <span className="text-muted text-capitalize mr-3">
+                    <i className="ti-pencil-alt mr-2"></i>Marketing
+                  </span>
+                  <span className="text-muted text-capitalize mr-3">
+                    <i className="ti-comment mr-2"></i>5 Comments
+                  </span>
+                  <span className="text-black text-capitalize mr-3">
+                    <i className="ti-time mr-1"></i> 28th January
+                  </span>
+                </div>
+
+                <h3 className="mt-3 mb-3">
+                  <a href="blog-single.html">
+                    Marketing Strategy to bring more affect
+                  </a>
+                </h3>
+                <p className="mb-4">
+                  Non illo quas blanditiis repellendus laboriosam minima animi.
+                  Consectetur accusantium pariatur repudiandae!
+                </p>
+
+                <a
+                  href="blog-single.html"
+                  className="btn btn-small btn-main btn-round-full"
+                >
+                  Learn More
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="row justify-content-center mt-5">
+          <div className="col-lg-6 text-center">
+            <nav className="navigation pagination d-inline-block">
+              <div className="nav-links">
+                <a className="prev page-numbers" href="/#">
+                  Prev
+                </a>
+                <span aria-current="page" className="page-numbers current">
+                  1
+                </span>
+                <a className="page-numbers" href="/#">
+                  2
+                </a>
+                <a class="next page-numbers" href="/">
+                  Next
+                </a>
+              </div>
+            </nav>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

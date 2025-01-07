@@ -1,23 +1,32 @@
-const express = require('express');
+const express = require("express");
+const { protect } = require("../middleware/auth");
+const multer = require("multer");
+const {
+  createPost,
+  getAllPosts,
+  getPostById,
+  updatePost,
+  deletePost,
+} = require("../controllers/postController");
+
 const router = express.Router();
-const postController = require('../controllers/postController');
-const authMiddleware = require('../middleware/auth'); // Middleware to check if user is authenticated
-const upload = require('../middleware/multerConfig'); // Middleware to handle file uploads
-// Create a new post (protected route)
-router.post('/create',upload.single('image'), authMiddleware, postController.createPost);
 
-//Home Page
-router.get('/home',authMiddleware,postController.getAllPosts);
-// Get all posts (public route)
-router.get('/', postController.getAllPosts);
+// Multer setup
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+const upload = multer({ storage });
 
-// Get a single post by ID (public route)
-router.get('/:id', postController.getPostById);
-
-// Update a post (protected route)
-router.put('/:id', authMiddleware, postController.updatePost);
-
-// Delete a post (protected route)
-router.delete('/:id', authMiddleware, postController.deletePost);
+// Routes
+router.post("/create", protect, upload.single("image"), createPost);
+router.get("/", getAllPosts);
+router.get("/:id", getPostById);
+router.put("/:id", protect, upload.single("image"), updatePost);
+router.delete("/:id", protect, deletePost);
 
 module.exports = router;

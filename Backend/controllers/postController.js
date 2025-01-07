@@ -1,49 +1,76 @@
-const Post = require('../models/post');
+const Post = require("../models/post"); // Post model
+const mongoose = require("mongoose");
 
 // Create a new post
 exports.createPost = async (req, res) => {
   try {
     const { title, content } = req.body;
 
-    // Access filename directly from req.file and handle missing file scenario
+    // Validate required fields
+    if (!title || !content) {
+      return res
+        .status(400)
+        .json({ message: "Title and content are required" });
+    }
+
+    // Handle file upload
     const image = req.file ? req.file.filename : null;
 
     const post = new Post({
       title,
       content,
       image,
-      user: req.user.id, // Assuming `req.user.id` exists after authentication
+      user: req.user.id, // Assuming `req.user.id` is set by authentication middleware
     });
 
     await post.save();
     res.status(201).json({ message: "Post created successfully", post });
   } catch (error) {
-    console.error("Error creating post:", error);
-    res.status(500).json({ message: "Error creating post", error });
+    console.error("Error creating post:", error.message);
+    res
+      .status(500)
+      .json({ message: "Error creating post", error: error.message });
   }
 };
-
 
 // Get all posts
 exports.getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.find().populate('user', 'username');
+    const posts = await Post.find()
+      .populate("user", "username") // Populate user field with username
+      .sort({ createdAt: -1 }); // Sort by latest created
     res.status(200).json(posts);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching posts', error });
+    console.error("Error fetching posts:", error.message);
+    res
+      .status(500)
+      .json({ message: "Error fetching posts", error: error.message });
   }
 };
 
 // Get a single post by ID
 exports.getPostById = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id).populate('user', 'username');
-    if (!post) {
-      return res.status(404).json({ message: 'Post not found' });
+    // Validate ID
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "Invalid post ID" });
     }
+
+    const post = await Post.findById(req.params.id).populate(
+      "user",
+      "username"
+    );
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
     res.status(200).json(post);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching post', error });
+    console.error("Error fetching post:", error.message);
+    res
+      .status(500)
+      .json({ message: "Error fetching post", error: error.message });
   }
 };
 
@@ -51,44 +78,67 @@ exports.getPostById = async (req, res) => {
 exports.updatePost = async (req, res) => {
   try {
     const { title, content } = req.body;
+
+    // Validate ID
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "Invalid post ID" });
+    }
+
     const post = await Post.findById(req.params.id);
 
     if (!post) {
-      return res.status(404).json({ message: 'Post not found' });
+      return res.status(404).json({ message: "Post not found" });
     }
 
     // Check if the logged-in user is the owner of the post
     if (post.user.toString() !== req.user.id) {
-      return res.status(403).json({ message: 'Unauthorized action' });
+      return res.status(403).json({ message: "Unauthorized action" });
     }
 
+    // Update fields
     post.title = title || post.title;
     post.content = content || post.content;
 
+    // Handle file upload if a new file is uploaded
+    if (req.file) {
+      post.image = req.file.filename;
+    }
+
     await post.save();
-    res.status(200).json({ message: 'Post updated successfully', post });
+    res.status(200).json({ message: "Post updated successfully", post });
   } catch (error) {
-    res.status(500).json({ message: 'Error updating post', error });
+    console.error("Error updating post:", error.message);
+    res
+      .status(500)
+      .json({ message: "Error updating post", error: error.message });
   }
 };
 
 // Delete a post
 exports.deletePost = async (req, res) => {
   try {
+    // Validate ID
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "Invalid post ID" });
+    }
+
     const post = await Post.findById(req.params.id);
 
     if (!post) {
-      return res.status(404).json({ message: 'Post not found' });
+      return res.status(404).json({ message: "Post not found" });
     }
 
     // Check if the logged-in user is the owner of the post
     if (post.user.toString() !== req.user.id) {
-      return res.status(403).json({ message: 'Unauthorized action' });
+      return res.status(403).json({ message: "Unauthorized action" });
     }
 
-    await post.remove();
-    res.status(200).json({ message: 'Post deleted successfully' });
+    await post.deleteOne();
+    res.status(200).json({ message: "Post deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting post', error });
+    console.error("Error deleting post:", error.message);
+    res
+      .status(500)
+      .json({ message: "Error deleting post", error: error.message });
   }
 };
