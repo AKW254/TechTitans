@@ -18,12 +18,10 @@ function Cards() {
               />
 
               <div className="blog-item-content bg-white p-5">
-                <div className="blog-item-meta bg-gray py-1 px-2">
-                 
-                </div>
+                <div className="blog-item-meta bg-gray py-1 px-2"></div>
 
                 <h3 className="mt-3 mb-3">
-                  <a href="blog-single.html">Improve design with typography?</a>
+                  <a href="/Single Post">Improve design with typography?</a>
                 </h3>
                 <p className="mb-4">
                   Non illo quas blanditiis repellendus laboriosam minima animi.
@@ -31,7 +29,7 @@ function Cards() {
                 </p>
 
                 <a
-                  href="blog-single.html"
+                  href="/Single Post"
                   className="btn btn-small btn-main btn-round-full"
                 >
                   Learn More
@@ -49,12 +47,10 @@ function Cards() {
               />
 
               <div className="blog-item-content bg-white p-5">
-                <div className="blog-item-meta bg-gray py-1 px-2">
-                  
-                </div>
+                <div className="blog-item-meta bg-gray py-1 px-2"></div>
 
                 <h3 className="mt-3 mb-3">
-                  <a href="blog-single.html">Interactivity connect consumer</a>
+                  <a href="/Single Post">Interactivity connect consumer</a>
                 </h3>
                 <p className="mb-4">
                   Non illo quas blanditiis repellendus laboriosam minima animi.
@@ -62,7 +58,7 @@ function Cards() {
                 </p>
 
                 <a
-                  href="blog-single.html"
+                  href="/Single Post"
                   className="btn btn-small btn-main btn-round-full"
                 >
                   Learn More
@@ -80,12 +76,10 @@ function Cards() {
               />
 
               <div className="blog-item-content bg-white p-5">
-                <div className="blog-item-meta bg-gray py-1 px-2">
-                  
-                </div>
+                <div className="blog-item-meta bg-gray py-1 px-2"></div>
 
                 <h3 className="mt-3 mb-3">
-                  <a href="blog-single.html">
+                  <a href="/Single Post">
                     Marketing Strategy to bring more affect
                   </a>
                 </h3>
@@ -95,7 +89,7 @@ function Cards() {
                 </p>
 
                 <a
-                  href="blog-single.html"
+                  href="/Single Post"
                   className="btn btn-small btn-main btn-round-full"
                 >
                   Learn More
@@ -112,12 +106,10 @@ function Cards() {
               />
 
               <div className="blog-item-content bg-white p-5">
-                <div className="blog-item-meta bg-gray py-1 px-2">
-            
-                </div>
+                <div className="blog-item-meta bg-gray py-1 px-2"></div>
 
                 <h3 className="mt-3 mb-3">
-                  <a href="blog-single.html">
+                  <a href="/Single Post">
                     Marketing Strategy to bring more affect
                   </a>
                 </h3>
@@ -127,7 +119,7 @@ function Cards() {
                 </p>
 
                 <a
-                  href="blog-single.html"
+                  href="/Single Post"
                   className="btn btn-small btn-main btn-round-full"
                 >
                   Learn More
