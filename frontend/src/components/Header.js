@@ -27,7 +27,7 @@ const Header = () => {
 			</ul>
 
 			<form className="form-lg-inline my-2 my-md-0 ml-lg-4 text-center">
-			  <a href="/#" className="btn btn-solid-border btn-round-full">Login</a>
+			  <a href="/login" className="btn btn-solid-border btn-round-full">Login</a>
 			</form>
 		  </div>
 		</div>
