@@ -5,7 +5,6 @@ const Header = () => {
 
 
   return (
-	
     <header className="navigation">
       <nav className="navbar  fixed-top navbar-expand-lg  py-4" id="navbar">
         <div className="container">
@@ -41,7 +40,7 @@ const Header = () => {
                 </a>
               </li>
               <li className="nav-item active float-right">
-                <a className="nav-link" href="/#">
+                <a className="nav-link" href="/Manage Post">
                   Manage Posts <span className="sr-only">(current)</span>
                 </a>
               </li>
