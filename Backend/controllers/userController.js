@@ -28,7 +28,7 @@ const login = asyncHandler(async (req, res) => {
 // @route   POST /api/users
 // @access  Public
 const register = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
+  const { username, email, password } = req.body;
 
   const userExists = await User.findOne({ email });
 
@@ -38,7 +38,7 @@ const register = asyncHandler(async (req, res) => {
   }
 
   const user = await User.create({
-    name,
+    username,
     email,
     password,
   });
@@ -48,7 +48,7 @@ const register = asyncHandler(async (req, res) => {
 
     res.status(201).json({
       _id: user._id,
-      name: user.name,
+      name: user.username,
       email: user.email,
     });
   } else {
@@ -77,7 +77,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
   if (user) {
     res.json({
       _id: user._id,
-      name: user.name,
+      name: user.username,
       email: user.email,
     });
   } else {
@@ -93,7 +93,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
   if (user) {
-    user.name = req.body.name || user.name;
+    user.name = req.body.name || user.username;
     user.email = req.body.email || user.email;
 
     if (req.body.password) {

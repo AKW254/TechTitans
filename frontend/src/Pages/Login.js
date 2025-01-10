@@ -1,10 +1,46 @@
-import React from 'react'
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { loginRequest } from "../store/actions/authActions";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Login() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { loading, error, isAuthenticated } = useSelector(
+    (state) => state.auth
+  ); // Get auth state from Redux
+
+  const [credentials, setCredentials] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    setCredentials({ ...credentials, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(loginRequest(credentials)); // Dispatch the login action
+  };
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error); // Show error toast
+    }
+    if (isAuthenticated) {
+      toast.success("Login successful!"); // Show success toast
+      navigate("/Home"); // Redirect on successful login
+    }
+  }, [error, isAuthenticated, navigate]); // Dependencies: error, isAuthenticated, navigate
+
   return (
     <>
       <div className="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
         <div className="row w-100">
+          {loading && <p>Loading...</p>}
           <div className="col-lg-6 d-none d-lg-flex align-items-center justify-content-center">
             <img
               src="images/Computer login-rafiki.svg" // Replace with your illustration/image URL
@@ -19,14 +55,18 @@ function Login() {
                 <p className="text-muted text-center mb-4">
                   Welcome back! Please sign in to your account.
                 </p>
-                <form>
+                <form onSubmit={handleSubmit}>
+                  {/* Fixed casing of onSubmit */}
                   <div className="form-group mb-3">
-                    <label htmlFor="username">Username</label>
+                    <label htmlFor="email">Email address</label>
                     <input
-                      type="text"
+                      type="email"
                       className="form-control"
-                      id="username"
-                      placeholder="Enter your username"
+                      id="email"
+                      placeholder="Enter your email address"
+                      name="email"
+                      value={credentials.email}
+                      onChange={handleChange}
                     />
                   </div>
                   <div className="form-group mb-3">
@@ -36,20 +76,18 @@ function Login() {
                       className="form-control"
                       id="password"
                       placeholder="Enter your password"
+                      name="password" // Fixed missing "name" attribute
+                      value={credentials.password}
+                      onChange={handleChange}
                     />
                   </div>
-                  <div className="form-check mb-3">
-                    <input
-                      type="checkbox"
-                      className="form-check-input"
-                      id="rememberMe"
-                    />
-                    <label className="form-check-label" htmlFor="rememberMe">
-                      Remember me
-                    </label>
-                  </div>
+
                   <div className="d-flex justify-content-between mb-3">
-                    <button className="btn btn-small btn-main btn-round-full">
+                    <button
+                      type="submit" // Added type="submit"
+                      className="btn btn-small btn-main btn-round-full"
+                      disabled={loading} // Disable button during loading
+                    >
                       Log In
                     </button>
                   </div>
@@ -69,4 +107,4 @@ function Login() {
   );
 }
 
-export default Login
+export default Login;

@@ -6,6 +6,7 @@ import Register from '../Pages/Register';
 import Singlepost from '../Pages/Single_post';
 import CreatePost from '../Pages/Create_Post';
 import ManagePost from '../Pages/Manage_Post';
+import Home from '../Pages/Home';
 function Routers() {
   return (
     <Routes>
@@ -15,6 +16,7 @@ function Routers() {
       <Route path="/Single Post" element={<Singlepost />} />
       <Route path="/Create Post" element={<CreatePost />} />
       <Route path="/Manage Post" element={<ManagePost />} />
+      <Route path="/Home" element={<Home />} />
     </Routes>
   );
 }

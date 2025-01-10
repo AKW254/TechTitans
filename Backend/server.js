@@ -6,7 +6,7 @@ const cookieParser = require("cookie-parser");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware.js");
 const userRoutes = require("./routes/userRoutes.js");
 const postRoutes = require("./routes/postRoutes.js");
-
+const cors = require("cors");
 dotenv.config();
 
 const port = process.env.PORT || 5000;
@@ -18,7 +18,14 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+const corsOptions = {
+  origin: "http://localhost:3000", // Your frontend origin
+  methods: "GET,POST,PUT,PATCH,DELETE", // Allowed HTTP methods
+  credentials: true, // Allow cookies and credentials
+};
 
+app.use(cors(corsOptions));
+ 
 // Middleware to log all incoming requests
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);

@@ -1,6 +1,57 @@
-import React from 'react'
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { registerRequest } from "../store/actions/authActions";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+
 
 function Register() {
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { loading, error, isAuthenticated } = useSelector(
+    (state) => state.auth
+  );
+
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "", // Add confirm password field
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Basic client-side validation
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match.");
+      return; // Stop submission
+    }
+
+    if (!formData.username || !formData.email || !formData.password) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
+
+    dispatch(registerRequest(formData));
+  };
+
+  React.useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+    if (isAuthenticated) {
+      toast.success("Registration successful!");;
+      navigate("/login"); // Redirect to login after successful registration
+    }
+  }, [error, isAuthenticated, navigate]);
+
   return (
     <div className="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
       <div className="row w-100">
@@ -18,7 +69,7 @@ function Register() {
               <p className="text-muted text-center mb-4">
                 Create your account to get started!
               </p>
-              <form>
+              <form onSubmit={handleSubmit}>
                 <div className="form-group mb-3">
                   <label htmlFor="username">Username</label>
                   <input
@@ -27,7 +78,8 @@ function Register() {
                     id="username"
                     name="username"
                     placeholder="Enter your username"
-                    value=""
+                    value={formData.username}
+                    onChange={handleChange}
                     required
                   />
                 </div>
@@ -38,7 +90,8 @@ function Register() {
                     className="form-control"
                     id="email"
                     name="email"
-                    value=""
+                    value={formData.email}
+                    onChange={handleChange}
                     required
                   />
                 </div>
@@ -49,6 +102,8 @@ function Register() {
                     className="form-control"
                     id="password"
                     name="password"
+                    value={formData.password}
+                    onChange={handleChange}
                     required
                   />
                 </div>
@@ -59,12 +114,15 @@ function Register() {
                     className="form-control"
                     id="confirmPassword"
                     name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
                     required
                   />
                 </div>
                 <button
                   type="submit"
                   className="btn btn-small btn-main btn-round-full"
+                  disabled={loading}
                 >
                   Register
                 </button>

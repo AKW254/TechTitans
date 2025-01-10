@@ -1,12 +1,26 @@
 import React from "react";
-
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { logout } from "../store/actions/authActions"; // Import your logout action
 
 const Header = () => {
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate(); // Initialize useNavigate
 
+  // Handle logout and navigation
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/"); // Redirect to home after logout
+  };
+
+  const handleNavigation = (path) => {
+    navigate(path); // Navigate to the specified path
+  };
 
   return (
     <header className="navigation">
-      <nav className="navbar  fixed-top navbar-expand-lg  py-4" id="navbar">
+      <nav className="navbar fixed-top navbar-expand-lg py-4" id="navbar">
         <div className="container">
           <a className="navbar-brand" href="/#">
             Tech<span>Titans.</span>
@@ -30,27 +44,69 @@ const Header = () => {
           >
             <ul className="navbar-nav ml-auto">
               <li className="nav-item active float-right">
-                <a className="nav-link" href="/#">
+                <a className="nav-link" href="/">
                   Home <span className="sr-only">(current)</span>
                 </a>
               </li>
-              <li className="nav-item active float-right">
-                <a className="nav-link" href="/Create Post">
-                  Create Post <span className="sr-only">(current)</span>
-                </a>
-              </li>
-              <li className="nav-item active float-right">
-                <a className="nav-link" href="/Manage Post">
-                  Manage Posts <span className="sr-only">(current)</span>
-                </a>
-              </li>
+              {isAuthenticated ? (
+                <>
+                  <li className="nav-item">
+                    <button
+                      className="nav-link btn btn-link"
+                      onClick={() => handleNavigation("/create-post")}
+                    >
+                      Create Post
+                    </button>
+                  </li>
+                  <li className="nav-item">
+                    <button
+                      className="nav-link btn btn-link"
+                      onClick={() => handleNavigation("/manage-posts")}
+                    >
+                      Manage Posts
+                    </button>
+                  </li>
+                  <li className="nav-item dropdown">
+                    <button
+                      className="nav-link dropdown-toggle btn btn-link"
+                      id="userDropdown"
+                      role="button"
+                      data-bs-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <span className="mr-2 d-none d-lg-inline text-gray-600 small">
+                        {user ? user.username : "User"}
+                      </span>
+                    </button>
+                    <div
+                      className="dropdown-menu dropdown-menu-end shadow animated--grow-in"
+                      aria-labelledby="userDropdown"
+                    >
+                      <button
+                        className="dropdown-item"
+                        onClick={() => handleNavigation("/profile")}
+                      >
+                        Profile
+                      </button>
+                      <div className="dropdown-divider"></div>
+                      <button className="dropdown-item" onClick={handleLogout}>
+                        Logout
+                      </button>
+                    </div>
+                  </li>
+                </>
+              ) : (
+                <li className="nav-item">
+                  <button
+                    className="nav-link btn btn-link"
+                    onClick={() => handleNavigation("/login")}
+                  >
+                    Login
+                  </button>
+                </li>
+              )}
             </ul>
-
-            <form className="form-lg-inline my-2 my-md-0 ml-lg-4 text-center">
-              <a href="/login" className="btn btn-solid-border btn-round-full">
-                Login
-              </a>
-            </form>
           </div>
         </div>
       </nav>
