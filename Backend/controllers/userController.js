@@ -73,20 +73,23 @@ const logout = (req, res) => {
 // @desc    Get user profile
 // @route   GET /api/users/profile
 // @access  Private
+// @route   GET /api/users/profile
+// @access  Private
 const getUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
+  // User is already attached to req by protect middleware
+  const user = req.user;
 
-  if (user) {
-    res.json({
-      _id: user._id,
-      name: user.username,
+  res.status(200).json({
+    success: true,
+    data: {
+      id: user._id,
+      username: user.username,
       email: user.email,
-    });
-  } else {
-    res.status(404);
-    throw new Error("User not found");
-  }
+      createdAt: user.createdAt
+    }
+  });
 });
+
 
 // @desc    Update user profile
 // @route   PUT /api/users/profile
@@ -95,7 +98,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
   if (user) {
-    user.name = req.body.name || user.username;
+    user.name = req.body.username || user.username;
     user.email = req.body.email || user.email;
 
     if (req.body.password) {
@@ -106,7 +109,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 
     res.json({
       _id: updatedUser._id,
-      name: updatedUser.name,
+      name: updatedUser.username,
       email: updatedUser.email,
     });
   } else {
