@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   getUserInfo,
-  updateProfileRequest
+  updateProfileRequest,
 } from "../store/actions/authActions";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -23,14 +23,16 @@ const Profile = () => {
     email: "",
   });
 
+  // Redirect unauthenticated users
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate("/login"); // Redirect to login if not authenticated
+      navigate("/login");
     } else {
-      dispatch(getUserInfo()); // Fetch user info
+      dispatch(getUserInfo());
     }
   }, [dispatch, isAuthenticated, navigate]);
 
+  // Sync formData with user state
   useEffect(() => {
     if (user) {
       setFormData({
@@ -40,16 +42,35 @@ const Profile = () => {
     }
   }, [user]);
 
+  // Show error notification
   useEffect(() => {
     if (error) {
-      toast.error(error); // Show error if there's an issue
+      toast.error(error);
     }
   }, [error]);
 
-  const handleEditClick = () => {
-    setEditMode(true);
+  // Handle input change
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Save profile changes
+  const handleSaveClick = async () => {
+    if (!formData.username || !formData.email) {
+      toast.error("Username and email are required!");
+      return;
+    }
+
+    try {
+      await dispatch(updateProfileRequest(formData));
+      toast.success("Profile updated successfully!");
+      setEditMode(false);
+    } catch (err) {
+      toast.error(err.message || "Failed to update profile");
+    }
+  };
+
+  // Cancel edit mode
   const handleCancelClick = () => {
     setFormData({
       username: user.username || "",
@@ -58,23 +79,12 @@ const Profile = () => {
     setEditMode(false);
   };
 
-  const handleSaveClick = () => {
-    dispatch(updateProfileRequest(formData))
-      .then(() => {
-        toast.success("Profile updated successfully!");
-        setEditMode(false);
-      })
-      .catch((err) => {
-        toast.error(err.message || "Failed to update profile");
-      });
-  };
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="loading-spinner">
+        <p>Loading...</p>
+      </div>
+    );
   }
 
   return (
@@ -89,12 +99,18 @@ const Profile = () => {
                 <h4>User Information</h4>
               </div>
               <div className="card-body">
-                <p>
-                  <strong>Username:</strong> {user.username}
-                </p>
-                <p>
-                  <strong>Email:</strong> {user.email}
-                </p>
+                {user ? (
+                  <>
+                    <p>
+                      <strong>Username:</strong> {user.username}
+                    </p>
+                    <p>
+                      <strong>Email:</strong> {user.email}
+                    </p>
+                  </>
+                ) : (
+                  <p>No user information available.</p>
+                )}
               </div>
             </div>
           </div>
@@ -118,7 +134,8 @@ const Profile = () => {
                       name="username"
                       value={formData.username}
                       onChange={handleChange}
-                      readOnly={!editMode}
+                      readOnly={!editMode || loading}
+                      disabled={loading}
                     />
                   </div>
                   <div className="mb-3">
@@ -132,7 +149,8 @@ const Profile = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      readOnly={!editMode}
+                      readOnly={!editMode || loading}
+                      disabled={loading}
                     />
                   </div>
                   {editMode ? (
@@ -149,6 +167,7 @@ const Profile = () => {
                         type="button"
                         className="btn btn-secondary"
                         onClick={handleCancelClick}
+                        disabled={loading}
                       >
                         Cancel
                       </button>
@@ -157,7 +176,7 @@ const Profile = () => {
                     <button
                       type="button"
                       className="btn btn-primary"
-                      onClick={handleEditClick}
+                      onClick={() => setEditMode(true)}
                     >
                       Edit Profile
                     </button>

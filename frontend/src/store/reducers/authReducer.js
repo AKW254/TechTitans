@@ -1,3 +1,4 @@
+import axios from "axios";
 import {
   REGISTER_REQUEST,
   REGISTER_SUCCESS,
@@ -14,74 +15,84 @@ import {
   PROFILE_UPDATE_FAIL,
 } from "../actionTypes";
 
-const userFromStorage = localStorage.getItem("userInfo")
-  ? JSON.parse(localStorage.getItem("userInfo"))
-  : null;
-
-const initialState = {
-  user: userFromStorage,
-  loading: false,
-  error: null,
-  isAuthenticated: !!userFromStorage,
-};
-
-
-const authReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case REGISTER_REQUEST:
-    case LOGIN_REQUEST:
-      return { ...state, loading: true, error: null };
-    case GET_USER_REQUEST:
-      return { ...state, loading: true, error: null };
-
-    case REGISTER_SUCCESS:
-    case LOGIN_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        user: action.payload,
-        isAuthenticated: true,
-        error: null,
-      };
-    case GET_USER_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        user: action.payload,
-        isAuthenticated: true,
-        error: null,
-      };
-    case PROFILE_UPDATE_SUCCESS:
-      return { loading: false, success: true, user: action.payload };
-
-    case REGISTER_FAILURE:
-    case LOGIN_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        error: action.payload,
-        isAuthenticated: false,
-      };
-    case LOGOUT:
-      return { ...initialState };
-
-    case PROFILE_UPDATE_REQUEST:
-      return { loading: true, success: false };
-    case GET_USER_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        error: action.payload,
-        isAuthenticated: false,
-      };
-
-    case PROFILE_UPDATE_FAIL:
-      return { loading: false, success: false, error: action.payload };
-
-    default:
-      return state;
+// Register User
+export const register = (userData) => async (dispatch) => {
+  try {
+    dispatch({ type: REGISTER_REQUEST });
+    
+    const { data } = await axios.post("/api/users/register", userData, {
+      withCredentials: true, // Ensures cookies are sent
+    });
+    
+    dispatch({ type: REGISTER_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: REGISTER_FAILURE,
+      payload: error.response?.data?.message || error.message,
+    });
   }
 };
 
+// Login User
+export const login = (credentials) => async (dispatch) => {
+  try {
+    dispatch({ type: LOGIN_REQUEST });
+    
+    const { data } = await axios.post("/api/users/login", credentials, {
+      withCredentials: true,
+    });
+    
+    dispatch({ type: LOGIN_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: LOGIN_FAILURE,
+      payload: error.response?.data?.message || error.message,
+    });
+  }
+};
 
-export default authReducer;
+// Logout User
+export const logout = () => async (dispatch) => {
+  try {
+    await axios.post("/api/users/logout", {}, { withCredentials: true });
+    dispatch({ type: LOGOUT });
+  } catch (error) {
+    console.error("Logout failed", error);
+  }
+};
+
+// Get User Profile
+export const getUserProfile = () => async (dispatch) => {
+  try {
+    dispatch({ type: GET_USER_REQUEST });
+    
+    const { data } = await axios.get("/api/users/profile", {
+      withCredentials: true,
+    });
+    
+    dispatch({ type: GET_USER_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: GET_USER_FAILURE,
+      payload: error.response?.data?.message || error.message,
+    });
+  }
+};
+
+// Update Profile
+export const updateProfile = (profileData) => async (dispatch) => {
+  try {
+    dispatch({ type: PROFILE_UPDATE_REQUEST });
+    
+    const { data } = await axios.put("/api/users/profile", profileData, {
+      withCredentials: true,
+    });
+    
+    dispatch({ type: PROFILE_UPDATE_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: PROFILE_UPDATE_FAIL,
+      payload: error.response?.data?.message || error.message,
+    });
+  }
+};

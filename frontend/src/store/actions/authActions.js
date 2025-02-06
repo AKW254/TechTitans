@@ -1,4 +1,5 @@
 import axios from "axios";
+import Cookies from "js-cookie"; // Import js-cookie for handling cookies
 import {
   REGISTER_REQUEST,
   REGISTER_SUCCESS,
@@ -32,72 +33,112 @@ export const registerRequest = (userData) => {
 
 export const loginRequest = (credentials) => {
   return async (dispatch) => {
-    dispatch({ type: LOGIN_REQUEST });
+    dispatch({ type: "LOGIN_REQUEST" }); // Dispatch login request action
     try {
-      const response = await axios.post(`${API_URL}/users/login`, credentials);
-      dispatch({ type: LOGIN_SUCCESS, payload: response.data.user });
+      const response = await axios.post(`${API_URL}/users/login`, credentials, {
+        withCredentials: true, // Ensure cookies are sent/received
+      });
+
+      const { user, token } = response.data;
+
+      // Save token in cookies for security
+      Cookies.set("token", token, { secure: true, sameSite: "Strict" });
+      Cookies.set("user", JSON.stringify(user), {
+        secure: true,
+        sameSite: "Strict",
+      });
+
+      dispatch({ type: "LOGIN_SUCCESS", payload: user }); // Dispatch success action with user data
     } catch (error) {
       dispatch({
-        type: LOGIN_FAILURE,
+        type: "LOGIN_FAILURE",
         payload: error.response?.data.message || error.message,
-      });
+      }); // Dispatch failure action with error message
     }
   };
 };
+export const logout = () => {
+  return (dispatch) => {
+    Cookies.remove("token"); // Remove token
+    Cookies.remove("user"); // Remove user info
 
-export const logout = () => ({
-  type: LOGOUT,
-});
+    dispatch({ type: "LOGOUT" });
+    window.location.href = "/login"; // Redirect to login page
+  };
+};
 
 export const getUserInfo = () => {
   return async (dispatch) => {
-    dispatch({ type: GET_USER_REQUEST });
+    dispatch({ type: "GET_USER_REQUEST" });
+
     try {
-      const response = await axios.get(`${API_URL}/users/getUserProfile`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`, // Pass the token
-        },
+      const response = await axios.get(`${API_URL}/users/profile`, {
+        withCredentials: true, // Ensure cookies are included
       });
-      dispatch({ type: GET_USER_SUCCESS, payload: response.data });
-    } catch (error) {
+
       dispatch({
-        type: GET_USER_FAILURE,
-        payload: error.response?.data.message || error.message,
+        type: "GET_USER_SUCCESS",
+        payload: response.data, // Assumes user data is returned in response.data
       });
+    } catch (error) {
+      let errorMessage = "Failed to fetch user information";
+
+      if (error.response) {
+        // Backend responded with a status code outside the 2xx range
+        errorMessage =
+          error.response.data?.message || error.response.statusText;
+
+        if (error.response.status === 401) {
+          // Unauthorized - Log the user out
+          dispatch({ type: "LOGOUT" });
+        }
+      } else if (error.request) {
+        // Request made, but no response received
+        errorMessage = "Network error - Please check your connection";
+      }
+
+      dispatch({
+        type: "GET_USER_FAILURE",
+        payload: errorMessage,
+      });
+
+      console.error("Error fetching user info:", errorMessage);
+      throw error; // Optional: Re-throw to let the calling component handle it
     }
   };
 };
 
-export const updateProfileRequest = (formData) => async (dispatch, getState) => {
-  try {
-    dispatch({ type: PROFILE_UPDATE_REQUEST });
+export const updateProfileRequest =
+  (formData) => async (dispatch, getState) => {
+    try {
+      dispatch({ type: PROFILE_UPDATE_REQUEST });
 
-    const {
-      auth: { user },
-    } = getState(); // Access the logged-in user's token from Redux state
+      const {
+        auth: { user },
+      } = getState(); // Access the logged-in user's token from Redux state
 
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${user.token}`, // Include the token for authenticated requests
-      },
-    };
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`, // Include the token for authenticated requests
+        },
+      };
 
-    const { data } = await axios.put(
-      `${API_URL}/users/updateUserProfile`,
-      formData,
-      config
-    );
+      const { data } = await axios.put(
+        `${API_URL}/users/profile`,
+        formData,
+        config
+      );
 
-    dispatch({ type: PROFILE_UPDATE_SUCCESS, payload: data });
+      dispatch({ type: PROFILE_UPDATE_SUCCESS, payload: data });
 
-    // Update user info in the Redux store after successful update
-    dispatch({ type: "LOGIN_SUCCESS", payload: data });
-    localStorage.setItem("userInfo", JSON.stringify(data));
-  } catch (error) {
-    dispatch({
-      type: PROFILE_UPDATE_FAIL,
-      payload: error.response?.data?.message || error.message,
-    });
-  }
-};
+      // Update user info in the Redux store after successful update
+      dispatch({ type: "LOGIN_SUCCESS", payload: data });
+      localStorage.setItem("userInfo", JSON.stringify(data));
+    } catch (error) {
+      dispatch({
+        type: PROFILE_UPDATE_FAIL,
+        payload: error.response?.data?.message || error.message,
+      });
+    }
+  };
