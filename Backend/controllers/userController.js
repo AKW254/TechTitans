@@ -25,17 +25,22 @@ const login = asyncHandler(async (req, res) => {
     throw new Error("Invalid email or password");
   }
 
-  // Generate token and return user details
+  // Generate token and set it in cookies
   generateToken(res, user._id);
 
   console.log("User logged in successfully:", user);
 
+  // Send user details in response
   res.json({
-    _id: user._id,
-    username: user.username,
-    email: user.email,
+    success: true, // Add a success field for better frontend handling
+   
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+   
   });
 });
+
 
 
 // @desc    Register a new user
@@ -61,9 +66,11 @@ const register = asyncHandler(async (req, res) => {
     generateToken(res, user._id);
 
     res.status(201).json({
-      _id: user._id,
-      name: user.username,
-      email: user.email,
+      data: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+      }
     });
   } else {
     res.status(400);

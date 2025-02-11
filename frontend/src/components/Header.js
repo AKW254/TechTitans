@@ -20,7 +20,7 @@ const Header = () => {
 
   return (
     <header className="navigation">
-      <nav className="navbar fixed-top navbar-expand-lg py-4" id="navbar">
+      <nav className="navbar fixed-top navbar-expand-lg py-2 px-2 mb-2" id="navbar">
         <div className="container">
           <a className="navbar-brand" href="/#">
             Tech<span>Titans.</span>
