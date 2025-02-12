@@ -33,15 +33,12 @@ const login = asyncHandler(async (req, res) => {
   // Send user details in response
   res.json({
     success: true, // Add a success field for better frontend handling
-   
-      _id: user._id,
-      username: user.username,
-      email: user.email,
-   
+
+    _id: user._id,
+    username: user.username,
+    email: user.email,
   });
 });
-
-
 
 // @desc    Register a new user
 // @route   POST /api/users
@@ -70,7 +67,7 @@ const register = asyncHandler(async (req, res) => {
         _id: user._id,
         username: user.username,
         email: user.email,
-      }
+      },
     });
   } else {
     res.status(400);
@@ -104,11 +101,10 @@ const getUserProfile = asyncHandler(async (req, res) => {
       id: user._id,
       username: user.username,
       email: user.email,
-      createdAt: user.createdAt
-    }
+      createdAt: user.createdAt,
+    },
   });
 });
-
 
 // @desc    Update user profile
 // @route   PUT /api/users/profile
@@ -117,7 +113,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
   if (user) {
-    user.name = req.body.username || user.username;
+    user.username = req.body.username || user.username;
     user.email = req.body.email || user.email;
 
     if (req.body.password) {
@@ -126,9 +122,10 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 
     const updatedUser = await user.save();
 
+   
     res.json({
       _id: updatedUser._id,
-      name: updatedUser.username,
+      username: updatedUser.username, 
       email: updatedUser.email,
     });
   } else {
@@ -136,6 +133,8 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     throw new Error("User not found");
   }
 });
+
+
 
 // Export the controllers
 module.exports = {

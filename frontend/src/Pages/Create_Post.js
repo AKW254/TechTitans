@@ -1,6 +1,6 @@
 import React from 'react'
 import Header from '../components/Header';
-import Footer from '../components/Footer';
+
 
 function Create_Post() {
   return (
@@ -50,7 +50,7 @@ function Create_Post() {
           </form>
         </div>
       </div>
-      <Footer />
+
     </>
   );
 }

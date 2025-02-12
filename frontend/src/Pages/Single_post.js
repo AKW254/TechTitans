@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "../components/Header";
-import Footer from "../components/Footer";
+
 
 function Single_post() {
   return (
@@ -54,7 +54,7 @@ function Single_post() {
           </div>
         </div>
       </section>
-      <Footer />
+  
     </>
   );
 }

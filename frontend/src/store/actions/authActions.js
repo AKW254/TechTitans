@@ -115,26 +115,24 @@ export const updateProfileRequest =
 
       const {
         auth: { user },
-      } = getState(); // Access the logged-in user's token from Redux state
+      } = getState(); // Get current user
 
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`, // Include the token for authenticated requests
-        },
-      };
+      console.log("Form Data Sent:", formData); // Debugging
 
-      const { data } = await axios.put(
-        `${API_URL}/users/profile`,
-        formData,
-        config
-      );
+      const { data } = await axios.put(`${API_URL}/users/profile`, formData, {
+        withCredentials: true,
+      });
+
+      console.log("Updated User Data:", data); // Debugging
 
       dispatch({ type: PROFILE_UPDATE_SUCCESS, payload: data });
 
-      // Update user info in the Redux store after successful update
+      // Update Redux state and persist in local storage
       dispatch({ type: "LOGIN_SUCCESS", payload: data });
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      localStorage.setItem(
+        "authState",
+        JSON.stringify({ ...getState().auth, user: data })
+      );
     } catch (error) {
       dispatch({
         type: PROFILE_UPDATE_FAIL,

@@ -7,7 +7,7 @@ import {
   updateProfileRequest,
 } from "../store/actions/authActions";
 import Header from "../components/Header";
-import Footer from "../components/Footer";
+
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -36,11 +36,12 @@ const Profile = () => {
   useEffect(() => {
     if (user) {
       setFormData({
-        username: user.username || "",
+        username: user.username || "", // Handle both cases
         email: user.email || "",
       });
     }
   }, [user]);
+
 
   // Show error notification
   useEffect(() => {
@@ -91,108 +92,108 @@ const Profile = () => {
     <>
       <Header />
       <div className="d-flex flex-column min-vh-100">
-  {/* Main Content */}
-  <main className="flex-grow-1">
-      <div className="container my-4 py-4">
-        <div className="row g-4">
-          {/* Left Column: User Info */}
-          <div className="col-12 col-md-6">
-            <div className="card shadow-sm">
-              <div className="card-header bg-primary text-white fw-bold">
-                <h4 className="mb-0">User Information</h4>
+        {/* Main Content */}
+        <main className="flex-grow-1">
+          <div className="container py-4 mt-2">
+            <div className="row g-4">
+              {/* Left Column: User Info */}
+              <div className="col-12 col-md-6 py-4 mt-2">
+                <div className="card shadow-sm">
+                  <div className="card-header  fw-bold">
+                    <h4 className="mb-0">User Information</h4>
+                  </div>
+                  <div className="card-body">
+                    {user ? (
+                      <>
+                        <p>
+                          <strong>Username:</strong> {user.username}
+                        </p>
+                        <p>
+                          <strong>Email:</strong> {user.email}
+                        </p>
+                      </>
+                    ) : (
+                      <p>No user information available.</p>
+                    )}
+                  </div>
+                </div>
               </div>
-              <div className="card-body">
-                {user ? (
-                  <>
-                    <p>
-                      <strong>Username:</strong> {user.username}
-                    </p>
-                    <p>
-                      <strong>Email:</strong> {user.email}
-                    </p>
-                  </>
-                ) : (
-                  <p>No user information available.</p>
-                )}
-              </div>
-            </div>
-          </div>
 
-          {/* Right Column: Update Form */}
-          <div className="col-12 col-md-6">
-            <div className="card shadow-sm">
-              <div className="card-header bg-secondary text-white fw-bold">
-                <h4 className="mb-0">Update Profile</h4>
-              </div>
-              <div className="card-body">
-                <form>
-                  <div className="mb-4">
-                    <label htmlFor="username" className="form-label">
-                      Username:
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="username"
-                      name="username"
-                      value={formData.username}
-                      onChange={handleChange}
-                      readOnly={!editMode || loading}
-                      disabled={loading}
-                    />
+              {/* Right Column: Update Form */}
+              <div className="col-12 col-md-6 py-4 mt-2">
+                <div className="card shadow-sm">
+                  <div className="card-header  fw-bold">
+                    <h4 className="mb-0">Update Profile</h4>
                   </div>
-                  <div className="mb-4">
-                    <label htmlFor="email" className="form-label">
-                      Email:
-                    </label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      readOnly={!editMode || loading}
-                      disabled={loading}
-                    />
+                  <div className="card-body">
+                    <form>
+                      <div className="mb-4">
+                        <label htmlFor="username" className="form-label">
+                          Username:
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="username"
+                          name="username"
+                          value={formData.username}
+                          onChange={handleChange}
+                          readOnly={!editMode || loading}
+                          disabled={loading}
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <label htmlFor="email" className="form-label">
+                          Email:
+                        </label>
+                        <input
+                          type="email"
+                          className="form-control"
+                          id="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          readOnly={!editMode || loading}
+                          disabled={loading}
+                        />
+                      </div>
+                      {editMode ? (
+                        <div className="d-flex justify-content-between">
+                          <button
+                            type="button"
+                            className="btn btn-success"
+                            onClick={handleSaveClick}
+                            disabled={loading}
+                          >
+                            {loading ? "Saving..." : "Save"}
+                          </button>
+                          <button
+                            type="button"
+                            className="btn btn-danger"
+                            onClick={handleCancelClick}
+                            disabled={loading}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          className="btn btn-primary w-100 mt-3"
+                          onClick={() => setEditMode(true)}
+                        >
+                          Edit Profile
+                        </button>
+                      )}
+                    </form>
                   </div>
-                  {editMode ? (
-                    <div className="d-flex justify-content-between">
-                      <button
-                        type="button"
-                        className="btn btn-success"
-                        onClick={handleSaveClick}
-                        disabled={loading}
-                      >
-                        {loading ? "Saving..." : "Save"}
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-danger"
-                        onClick={handleCancelClick}
-                        disabled={loading}
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  ) : (
-                    <button
-                      type="button"
-                      className="btn btn-primary w-100 mt-3"
-                      onClick={() => setEditMode(true)}
-                    >
-                      Edit Profile
-                    </button>
-                  )}
-                </form>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </main>
       </div>
-    </main>
-    </div>
-      <Footer />
+  
     </>
   );
 };

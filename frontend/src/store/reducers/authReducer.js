@@ -14,7 +14,7 @@ import {
   PROFILE_UPDATE_FAIL,
 } from "../actionTypes";
 
-const initialState = {
+const initialState = JSON.parse(localStorage.getItem("authState")) || {
   user: null,
   isAuthenticated: false,
   loading: false,
@@ -23,6 +23,8 @@ const initialState = {
 
 // Auth Reducer
 const authReducer = (state = initialState, action) => {
+  let newState;
+
   switch (action.type) {
     case REGISTER_REQUEST:
     case LOGIN_REQUEST:
@@ -32,28 +34,43 @@ const authReducer = (state = initialState, action) => {
 
     case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:
-      return {
+      newState = {
         ...state,
         loading: false,
-        user: action.payload, // User details from action.payload
+        user: action.payload,
         isAuthenticated: true,
         error: null,
       };
+      localStorage.setItem("authState", JSON.stringify(newState)); // Save to localStorage
+      return newState;
 
     case GET_USER_SUCCESS:
-      return {
+      newState = {
         ...state,
         loading: false,
-        user: action.payload.data, // Extract user details from "data"
+        user: action.payload.data,
         isAuthenticated: true,
         error: null,
       };
+      localStorage.setItem("authState", JSON.stringify(newState));
+      return newState;
 
     case PROFILE_UPDATE_SUCCESS:
+      const updatedUser = { ...state.user, ...action.payload };
+
+      // Save updated user to localStorage
+      localStorage.setItem(
+        "authState",
+        JSON.stringify({
+          ...state,
+          user: updatedUser,
+        })
+      );
+
       return {
         ...state,
+        user: updatedUser,
         loading: false,
-        user: { ...state.user, ...action.payload }, // Update only modified fields
         error: null,
       };
 
@@ -61,15 +78,23 @@ const authReducer = (state = initialState, action) => {
     case LOGIN_FAILURE:
     case GET_USER_FAILURE:
     case PROFILE_UPDATE_FAIL:
-      return {
+      newState = {
         ...state,
         loading: false,
         error: action.payload,
         isAuthenticated: false,
       };
+      localStorage.setItem("authState", JSON.stringify(newState));
+      return newState;
 
     case LOGOUT:
-      return initialState; // Reset state completely on logout
+      localStorage.removeItem("authState"); // Clear storage on logout
+      return {
+        user: null,
+        isAuthenticated: false,
+        loading: false,
+        error: null,
+      };
 
     default:
       return state;

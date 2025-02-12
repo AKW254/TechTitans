@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { logout } from "../store/actions/authActions"; // Import your logout action
@@ -7,6 +7,12 @@ const Header = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Initialize useNavigate
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/login");
+    }
+  }, [dispatch, isAuthenticated, navigate]);
 
   // Handle logout and navigation
   const handleLogout = () => {
@@ -20,7 +26,7 @@ const Header = () => {
 
   return (
     <header className="navigation">
-      <nav className="navbar fixed-top navbar-expand-lg py-2 px-2 mb-2" id="navbar">
+      <nav className="navbar fixed-top navbar-expand-lg px-2 mb-2" id="navbar">
         <div className="container">
           <a className="navbar-brand" href="/#">
             Tech<span>Titans.</span>
