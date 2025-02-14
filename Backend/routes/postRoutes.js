@@ -9,8 +9,6 @@ const {
   deletePost,
 } = require("../controllers/postController");
 
-const router = express.Router();
-
 // Multer setup
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -28,5 +26,4 @@ router.get("/", getAllPosts);
 router.get("/:id", getPostById);
 router.put("/:id", protect, upload.single("image"), updatePost);
 router.delete("/:id", protect, deletePost);
-
 module.exports = router;

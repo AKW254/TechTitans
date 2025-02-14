@@ -13,13 +13,11 @@ exports.createPost = async (req, res) => {
         .json({ message: "Title and content are required" });
     }
 
-    // Handle file upload
-    const image = req.file ? req.file.filename : null;
+   
 
     const post = new Post({
       title,
       content,
-      image,
       user: req.user.id, // Assuming `req.user.id` is set by authentication middleware
     });
 
