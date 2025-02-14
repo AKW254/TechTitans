@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, compose } from "redux";
-import thunk from "redux-thunk";
+import { thunk } from "redux-thunk"; // Fix: Import thunk correctly
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // Uses LocalStorage
 import rootReducer from "./reducers";
