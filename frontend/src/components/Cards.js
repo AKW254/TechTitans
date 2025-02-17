@@ -1,156 +1,63 @@
-import React from 'react';
-
-
-
+import React,{ useEffect} from 'react';
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { getPosts } from "../store/actions/postActions";
 function Cards() {
-  
+  const dispatch = useDispatch();
+    const navigate = useNavigate();
+  const { posts, loading, error } = useSelector((state) => state.post);
+
+  useEffect(() => {
+    dispatch(getPosts());
+  }, [dispatch]);
+  // Handle view single post
+  const handleViewPost = (postId) => {
+    navigate(`/post/${postId}`);
+  };
 
   return (
-    <>
-      <div className="container">
-        <div className="row">
-          <div className="col-lg-6 col-md-6 mb-5">
-            <div className="blog-item">
-              <img
-                src="images/blog/1.jpg"
-                alt=""
-                className="img-fluid rounded"
-              />
-
-              <div className="blog-item-content bg-white p-5">
-                <div className="blog-item-meta bg-gray py-1 px-2"></div>
-
-                <h3 className="mt-3 mb-3">
-                  <a href="/Single Post">Improve design with typography?</a>
-                </h3>
-                <p className="mb-4">
-                  Non illo quas blanditiis repellendus laboriosam minima animi.
-                  Consectetur accusantium pariatur repudiandae!
-                </p>
-
-                <a
-                  href="/Single Post"
-                  className="btn btn-small btn-main btn-round-full"
-                >
-                  Learn More
-                </a>
+    <div className="container">
+      <div className="row">
+        {loading ? (
+          <p>Loading posts...</p>
+        ) : error ? (
+          <p className="text-danger">Error: {error}</p>
+        ) : posts.length === 0 ? (
+          <div className="text-center">
+            <img src="" alt="No Posts" width="250px" />
+            <p className="mt-3">No posts available.</p>
+          </div>
+        ) : (
+          posts.map((post) => (
+            <div key={post._id} className="col-lg-6 col-md-6 mb-5">
+              <div className="blog-item">
+                <img
+                  src={`http://localhost:5000/public/uploads/${post.image}`}
+                  alt={post.title}
+                  className="img-fluid rounded"
+                />
+                <div className="blog-item-content bg-white p-5">
+                  <h3 className="mt-3 mb-3">
+                    <a onClick={() => handleViewPost(post._id)}>{post.title}</a>
+                  </h3>
+                  <p className="mb-4">
+                    {post.content.length > 100
+                      ? post.content.substring(0, 100) + "..."
+                      : post.content}
+                  </p>
+                  <button
+                    onClick={() => handleViewPost(post._id)}
+                    className="btn btn-small btn-main btn-round-full"
+                  >
+                    Learn More
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-
-          <div className="col-lg-6 col-md-6 mb-5">
-            <div className="blog-item">
-              <img
-                src="images/blog/2.jpg"
-                alt=""
-                className="img-fluid rounded"
-              />
-
-              <div className="blog-item-content bg-white p-5">
-                <div className="blog-item-meta bg-gray py-1 px-2"></div>
-
-                <h3 className="mt-3 mb-3">
-                  <a href="/Single Post">Interactivity connect consumer</a>
-                </h3>
-                <p className="mb-4">
-                  Non illo quas blanditiis repellendus laboriosam minima animi.
-                  Consectetur accusantium pariatur repudiandae!
-                </p>
-
-                <a
-                  href="/Single Post"
-                  className="btn btn-small btn-main btn-round-full"
-                >
-                  Learn More
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-lg-6 col-md-6 mb-5">
-            <div className="blog-item">
-              <img
-                src="images/blog/3.jpg"
-                alt=""
-                className="img-fluid rounded"
-              />
-
-              <div className="blog-item-content bg-white p-5">
-                <div className="blog-item-meta bg-gray py-1 px-2"></div>
-
-                <h3 className="mt-3 mb-3">
-                  <a href="/Single Post">
-                    Marketing Strategy to bring more affect
-                  </a>
-                </h3>
-                <p className="mb-4">
-                  Non illo quas blanditiis repellendus laboriosam minima animi.
-                  Consectetur accusantium pariatur repudiandae!
-                </p>
-
-                <a
-                  href="/Single Post"
-                  className="btn btn-small btn-main btn-round-full"
-                >
-                  Learn More
-                </a>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-6 col-md-6 mb-5">
-            <div className="blog-item">
-              <img
-                src="images/blog/4.jpg"
-                alt=""
-                className="img-fluid rounded"
-              />
-
-              <div className="blog-item-content bg-white p-5">
-                <div className="blog-item-meta bg-gray py-1 px-2"></div>
-
-                <h3 className="mt-3 mb-3">
-                  <a href="/Single Post">
-                    Marketing Strategy to bring more affect
-                  </a>
-                </h3>
-                <p className="mb-4">
-                  Non illo quas blanditiis repellendus laboriosam minima animi.
-                  Consectetur accusantium pariatur repudiandae!
-                </p>
-
-                <a
-                  href="/Single Post"
-                  className="btn btn-small btn-main btn-round-full"
-                >
-                  Learn More
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="row justify-content-center mt-5">
-          <div className="col-lg-6 text-center">
-            <nav className="navigation pagination d-inline-block">
-              <div className="nav-links">
-                <a className="prev page-numbers" href="/#">
-                  Prev
-                </a>
-                <span aria-current="page" className="page-numbers current">
-                  1
-                </span>
-                <a className="page-numbers" href="/#">
-                  2
-                </a>
-                <a class="next page-numbers" href="/">
-                  Next
-                </a>
-              </div>
-            </nav>
-          </div>
-        </div>
+          ))
+        )}
       </div>
-    </>
+    </div>
   );
 }
 

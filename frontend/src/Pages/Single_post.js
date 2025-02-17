@@ -1,8 +1,20 @@
-import React from "react";
-import Header from "../components/Header";
-
-
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getPostById } from "../store/actions/postActions";
+import { useParams } from "react-router-dom";
+import Header from "..//components/Header";
 function Single_post() {
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const { post, loading, error } = useSelector((state) => state.post);
+
+    useEffect(() => {
+      dispatch(getPostById(id));
+    }, [dispatch, id]);
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error}</p>;
+    if (!post) return <p>Post not found</p>;
   return (
     <>
       <Header />
@@ -14,23 +26,13 @@ function Single_post() {
                 <div class="col-lg-12 mb-5">
                   <div class="single-blog-item">
                     <img
-                      src="images/blog/2.jpg"
-                      alt=""
+                      src={`http://localhost:5000/uploads/${post.image}`}
+                      alt={post.title}
                       class="img-fluid rounded"
                     />
                     <div class="blog-item-content bg-white p-5">
-                      <h2 class="mt-3 mb-4">
-                        
-                          Improve design with typography?
-                       
-                      </h2>
-                      <p>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing
-                        elit. Possimus natus, consectetur? Illum libero vel
-                        nihil nisi quae, voluptatem, sapiente necessitatibus
-                        distinctio voluptates, iusto qui. Laboriosam autem, nam
-                        voluptate in beatae.
-                      </p>
+                      <h2 class="mt-3 mb-4">{post.title}</h2>
+                      <p>{post.content}</p>
                     </div>
                   </div>
                 </div>
@@ -40,13 +42,13 @@ function Single_post() {
               <div class="sidebar-wrap">
                 <div class="sidebar-widget card border-0 mb-3">
                   <img
-                    src="images/blog/blog-author.jpg"
+                    src={`http://localhost:5000/uploads/default.png`}
                     alt=""
                     class="img-fluid"
                   />
                   <div class="card-body p-4 text-center">
-                    <h5 class="mb-0 mt-4">Arther Conal</h5>
-					<p class="text-muted mb-0">Blog Author</p>
+                    <h5 class="mb-0 mt-4">{post.username}</h5>
+                    <p class="text-muted mb-0">Blog Author</p>
                   </div>
                 </div>
               </div>
@@ -54,7 +56,6 @@ function Single_post() {
           </div>
         </div>
       </section>
-  
     </>
   );
 }

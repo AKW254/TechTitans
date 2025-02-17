@@ -1,5 +1,5 @@
 import axios from "axios";
-import Cookies from "js-cookie"; // Import js-cookie for handling cookies
+ // Import js-cookie for handling cookies
 import {
   GET_POSTS_REQUEST,
   GET_POSTS_SUCCESS,
@@ -21,7 +21,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 
 //Create Post
-export const createPostRequest = (postData) => {
+export const createPost = (postData) => {
   return async (dispatch) => {
     dispatch({ type: CREATE_POST_REQUEST });
     try {
@@ -37,11 +37,11 @@ export const createPostRequest = (postData) => {
 };
 
 //Get Posts
-export const getPostsRequest = () => {
+export const getPosts = () => {
   return async (dispatch) => {
     dispatch({ type: GET_POSTS_REQUEST });
     try {
-      const response = await axios.get(`${API_URL}/posts/`, postData);
+      const response = await axios.get(`${API_URL}/posts/`);
       dispatch({ type: GET_POSTS_SUCCESS, payload: response.data });
     } catch (error) {
       dispatch({
@@ -53,7 +53,7 @@ export const getPostsRequest = () => {
 };
 
 //Get single Post
-export const getPostByIdRequest = (postId) => {
+export const getPostById = (postId) => {
   return async (dispatch) => {
     dispatch({ type: SINGLE_POST_REQUEST });
     try {

@@ -14,7 +14,7 @@ function Routers() {
       <Route path="/" element={<Index />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/Single Post" element={<Singlepost />} />
+      <Route path="/post/:id" element={<Singlepost />} />
       <Route path="/Create Post" element={<CreatePost />} />
       <Route path="/Manage Post" element={<ManagePost />} />
       <Route path="/Home" element={<Home />} />
