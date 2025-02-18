@@ -30,9 +30,9 @@ app.use(hpp());
 // Rate Limiting
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 500, // Limit each IP to 500 requests per window
-  standardHeaders: true,
-  legacyHeaders: false,
+  max: 500, // Limit each IP to 500 requests per windowMs
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
 
 // Body Parsers
@@ -44,12 +44,9 @@ app.use(cookieParser());
 const corsOptions = {
   origin: process.env.CLIENT_ORIGIN || "http://localhost:3000",
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
-  optionsSuccessStatus: 200,
-  maxAge: 86400,
 };
-
 app.use(cors(corsOptions));
 
 // Development vs Production Middleware
@@ -68,23 +65,32 @@ if (environment === "development") {
 app.use("/api/users", apiLimiter, userRoutes);
 app.use("/api/posts", apiLimiter, postRoutes);
 
-// Production Frontend Serving
+// Serve static files for uploads
 if (environment === "production") {
   const __dirname = path.resolve();
-
-  // Static assets
   app.use(
-    express.static(path.join(__dirname, "/frontend/dist"), {
+    "/uploads",
+    express.static(path.join(__dirname, "uploads"), {
       maxAge: 31557600000, // 1 year cache
+      setHeaders: (res, path) => {
+        res.set("Cross-Origin-Resource-Policy", "same-site"); // Allow same-site requests
+      },
     })
   );
-
   // SPA Fallback
   app.get("*", (req, res) => {
-    res.set("Cache-Control", "public, max-age=604800");
+    res.set("Cache-Control", "public, max-age=604800"); // 1 week cache
     res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
   });
 } else {
+  app.use(
+    "/uploads",
+    express.static(path.join(__dirname, "uploads"), {
+      setHeaders: (res, path) => {
+        res.set("Cross-Origin-Resource-Policy", "same-site"); // Allow same-site requests
+      },
+    })
+  );
   app.get("/", (req, res) => {
     res.json({
       status: "API Running",
@@ -100,19 +106,9 @@ app.use(errorHandler);
 
 // Server Startup
 const server = app.listen(port, () => {
-  console.log(`
- ████████╗██╗████████╗ █████╗ ███╗   ██╗     ████████╗███████╗ ██████╗██╗  ██╗
-╚══██╔══╝██║╚══██╔══╝██╔══██╗████╗  ██║     ╚══██╔══╝██╔════╝██╔════╝██║  ██║ 
-   ██║   ██║   ██║   ███████║██╔██╗ ██║        ██║   █████╗  ██║     ███████║
-   ██║   ██║   ██║   ██╔══██║██║╚██╗██║        ██║   ██╔══╝  ██║     ██╔══██║
-   ██║   ██║   ██║   ██║  ██║██║ ╚████║        ██║   ███████╗╚██████╗██║  ██║
-   ╚═╝   ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝        ╚═╝   ╚══════╝ ╚═════╝╚═╝  ╚═╝
- 
-  `);
   console.log(`Server running in ${environment} mode on port ${port}`);
 });
 
-// Handle unhandled promise rejections
 process.on("unhandledRejection", (err) => {
   console.error(`Error: ${err.message}`);
   server.close(() => process.exit(1));

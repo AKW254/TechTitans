@@ -29,12 +29,15 @@ function Cards() {
           </div>
         ) : (
           posts.map((post) => (
-            <div key={post._id} className="col-lg-6 col-md-6 mb-5">
+            <div key={post._id} className="col-lg-6 col-md-6 col-sm-12 mb-5">
               <div className="blog-item">
                 <img
-                  src={`http://localhost:5000/public/uploads/${post.image}`}
+                  src={`http://localhost:5000/uploads/${
+                    post?.image || "default_blog_post_image.png"
+                  }`}
                   alt={post.title}
-                  className="img-fluid rounded"
+                  className="img-fluid"
+                  style={{ width: "600px", height: "300px" }}
                 />
                 <div className="blog-item-content bg-white p-5">
                   <h3 className="mt-3 mb-3">
