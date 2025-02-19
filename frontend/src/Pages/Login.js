@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginRequest } from "../store/actions/authActions";
+import { loginUser } from "../store/actions/authActions";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -23,7 +23,7 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(loginRequest(credentials)); // Dispatch the login action
+    dispatch(loginUser(credentials)); // Dispatch the login action
   };
 
   useEffect(() => {

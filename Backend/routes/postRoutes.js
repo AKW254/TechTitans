@@ -1,7 +1,9 @@
 const express = require("express");
-const router = express.Router(); // Initialize router
+const router = express.Router();
 const { protect } = require("../middleware/auth");
 const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 const {
   createPost,
   getAllPosts,
@@ -10,15 +12,23 @@ const {
   deletePost,
 } = require("../controllers/postController");
 
-// Multer setup
+// Ensure "uploads/" directory exists
+const uploadDir = "uploads/";
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// Define storage for Multer
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: (req, file, cb) => {
     cb(null, "uploads/");
   },
-  filename: function (req, file, cb) {
-    cb(null, `${Date.now()}-${file.originalname}`);
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
   },
 });
+
+// Multer upload middleware
 const upload = multer({ storage });
 
 // Routes
@@ -27,4 +37,5 @@ router.get("/", getAllPosts);
 router.get("/:id", getPostById);
 router.put("/:id", protect, upload.single("image"), updatePost);
 router.delete("/:id", protect, deletePost);
+
 module.exports = router;

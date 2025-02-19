@@ -36,17 +36,25 @@ const apiLimiter = rateLimit({
 });
 
 // Body Parsers
-app.use(express.json({ limit: "10kb" }));
-app.use(express.urlencoded({ extended: true, limit: "10kb" }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // CORS Configuration
 const corsOptions = {
   origin: process.env.CLIENT_ORIGIN || "http://localhost:3000",
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "X-Requested-With",
+    "Accept",
+    "Origin",
+  ],
   credentials: true,
+  optionsSuccessStatus: 204, // Prevents CORS preflight issues
 };
+
 app.use(cors(corsOptions));
 
 // Development vs Production Middleware
@@ -63,6 +71,13 @@ if (environment === "development") {
 
 // API Routes
 app.use("/api/users", apiLimiter, userRoutes);
+const loginLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: 10, // Only allow 10 attempts in 5 minutes
+  message: "Too many login attempts, please try again later.",
+});
+app.use("/api/users/login", loginLimiter);
+
 app.use("/api/posts", apiLimiter, postRoutes);
 
 // Serve static files for uploads

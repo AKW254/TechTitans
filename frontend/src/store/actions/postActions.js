@@ -24,8 +24,19 @@ const API_URL = process.env.REACT_APP_API_URL;
 export const createPost = (postData) => {
   return async (dispatch) => {
     dispatch({ type: CREATE_POST_REQUEST });
+
     try {
-      const response = await axios.post(`${API_URL}/posts/create`, postData);
+      const config = {
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true, // To send cookies with request
+      };
+
+      const response = await axios.post(
+        `${API_URL}/posts/create`,
+        postData,
+        config
+      );
+
       dispatch({ type: CREATE_POST_SUCCESS, payload: response.data });
     } catch (error) {
       dispatch({
@@ -35,6 +46,7 @@ export const createPost = (postData) => {
     }
   };
 };
+
 
 //Get Posts
 export const getPosts = () => {

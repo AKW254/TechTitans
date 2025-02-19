@@ -1,10 +1,12 @@
 const Post = require("../models/post"); // Post model
 const mongoose = require("mongoose");
+const multer = require("multer");
 
 // Create a new post
 exports.createPost = async (req, res) => {
   try {
     const { title, content } = req.body;
+    const image = req.file ? req.file.filename : null; // Handle image upload
 
     // Validate required fields
     if (!title || !content) {
@@ -13,11 +15,15 @@ exports.createPost = async (req, res) => {
         .json({ message: "Title and content are required" });
     }
 
-   
+    // Ensure image is required
+    if (!image) {
+      return res.status(400).json({ message: "Image is required" });
+    }
 
     const post = new Post({
       title,
       content,
+      image, // Save the filename to the database
       user: req.user.id, // Assuming `req.user.id` is set by authentication middleware
     });
 

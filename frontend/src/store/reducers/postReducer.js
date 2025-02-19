@@ -16,10 +16,11 @@ import {
   DELETE_POST_FAILURE,
 } from "../actionTypes";
 
-const initialState =  {
+const initialState = {
   posts: [],
   loading: false,
   error: null,
+  success: false,
 };
 
 export const postReducer = (state = initialState, action) => {
@@ -27,18 +28,26 @@ export const postReducer = (state = initialState, action) => {
     case GET_POSTS_REQUEST:
     case SINGLE_POST_REQUEST:
     case CREATE_POST_REQUEST:
+      return{ ...state, loading: true, error: null ,success:false };
     case UPDATE_POST_REQUEST:    
     case DELETE_POST_REQUEST:
       return { ...state, loading: true, error: null };
 
     case GET_POSTS_SUCCESS:
-      return { ...state, posts: action.payload, loading: false, error: null };
+       return { ...state, posts: action.payload, loading: false, error: null };
+     
 
     case SINGLE_POST_SUCCESS:
       return { ...state, post: action.payload, loading: false, error: null };
 
     case CREATE_POST_SUCCESS:
-      return { ...state, posts: action.payload, loading: false, error: null };
+     return {
+       ...state,
+       posts: [action.payload, ...state.posts],
+       loading: false,
+       error: null,
+       success: true, // Set success to true when post is created
+     };
     case UPDATE_POST_SUCCESS:
       return {
         ...state,

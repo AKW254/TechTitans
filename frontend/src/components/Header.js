@@ -1,27 +1,31 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { logout } from "../store/actions/authActions"; // Import your logout action
+import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../store/actions/authActions";
+import { persistor } from "../store/config"; // Import persistor
 
 const Header = () => {
-  const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
+
+  // Local state for username (ensures immediate UI update)
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated && persistor.getState().bootstrapped) {
       navigate("/login");
     }
-  }, [dispatch, isAuthenticated, navigate]);
+    if (isAuthenticated && user?.data?.username) {
+      setUsername(user.data.username); // Updates username immediately on login
+    }
+  }, [isAuthenticated, user, navigate]);
 
-  // Handle logout and navigation
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/"); // Redirect to home after logout
-  };
+  const handleNavigation = (path) => navigate(path);
 
-  const handleNavigation = (path) => {
-    navigate(path); // Navigate to the specified path
+  const handleLogout = async () => {
+    await dispatch(logoutUser());
+    navigate("/");
   };
 
   return (
@@ -51,7 +55,7 @@ const Header = () => {
             <ul className="navbar-nav ml-auto">
               <li className="nav-item active float-right">
                 <a className="nav-link" href="/">
-                  Home <span className="sr-only">(current)</span>
+                  Home
                 </a>
               </li>
               {isAuthenticated ? (
@@ -82,7 +86,7 @@ const Header = () => {
                       aria-expanded="false"
                     >
                       <span className="mr-2 d-none d-lg-inline text-gray-600 small">
-                        {user ? user.username : "User"}
+                        {username || "User"}
                       </span>
                     </button>
                     <div

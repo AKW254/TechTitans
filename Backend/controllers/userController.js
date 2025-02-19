@@ -34,9 +34,11 @@ const login = asyncHandler(async (req, res) => {
   res.json({
     success: true, // Add a success field for better frontend handling
 
-    _id: user._id,
-    username: user.username,
-    email: user.email,
+    data: {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+    },
   });
 });
 

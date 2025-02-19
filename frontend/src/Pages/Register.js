@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { registerRequest } from "../store/actions/authActions";
+import { registerUser } from "../store/actions/authActions";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -39,7 +39,7 @@ function Register() {
       return;
     }
 
-    dispatch(registerRequest(formData));
+    dispatch(registerUser(formData));
   };
 
   React.useEffect(() => {

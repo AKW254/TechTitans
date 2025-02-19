@@ -2,10 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import {
-  getUserInfo,
-  updateProfileRequest,
-} from "../store/actions/authActions";
+import { getUserInfo, updateProfile } from "../store/actions/authActions";
 import Header from "../components/Header";
 
 
@@ -63,7 +60,7 @@ const Profile = () => {
     }
 
     try {
-      await dispatch(updateProfileRequest(formData));
+      await dispatch(updateProfile(formData));
       toast.success("Profile updated successfully!");
       setEditMode(false);
     } catch (err) {
