@@ -81,7 +81,7 @@ export const getPostById = (postId) => {
 };  
 
 //Update Post
-export const updatePostRequest = (postId, postData) => {
+export const updatePost = (postId, postData) => {
   return async (dispatch) => {
     dispatch({ type: UPDATE_POST_REQUEST });
     try {
@@ -100,7 +100,7 @@ export const updatePostRequest = (postId, postData) => {
 };
 
 //Delete Post
-export const deletePostRequest = (postId) => {
+export const deletePost = (postId) => {
   return async (dispatch) => {
     dispatch({ type: DELETE_POST_REQUEST });
     try {

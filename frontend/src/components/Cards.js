@@ -1,64 +1,61 @@
-import React,{ useEffect} from 'react';
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { getPosts } from "../store/actions/postActions";
-function Cards() {
-  const dispatch = useDispatch();
-    const navigate = useNavigate();
-  const { posts, loading, error } = useSelector((state) => state.post);
+import React from "react";
 
-  useEffect(() => {
-    dispatch(getPosts());
-  }, [dispatch]);
-  // Handle view single post
-  const handleViewPost = (postId) => {
-    navigate(`/post/${postId}`);
-  };
+function Cards({ post, onView, onEdit, onDelete, isEditable }) {
+  // Ensure post is not undefined before rendering
+  if (!post) {
+    console.error("Card received an undefined post");
+    return null; // Prevents rendering an empty card
+  }
 
   return (
-    <div className="container">
-      <div className="row">
-        {loading ? (
-          <p>Loading posts...</p>
-        ) : error ? (
-          <p className="text-danger">Error: {error}</p>
-        ) : posts.length === 0 ? (
-          <div className="text-center">
-            <img src="" alt="No Posts" width="250px" />
-            <p className="mt-3">No posts available.</p>
-          </div>
-        ) : (
-          posts.map((post) => (
-            <div key={post._id} className="col-lg-6 col-md-6 col-sm-12 mb-5">
-              <div className="blog-item">
-                <img
-                  src={`http://localhost:5000/uploads/${
-                    post?.image || "default_blog_post_image.png"
-                  }`}
-                  alt={post.title}
-                  className="img-fluid"
-                  style={{ width: "600px", height: "300px" }}
-                />
-                <div className="blog-item-content bg-white p-5">
-                  <h3 className="mt-3 mb-3">
-                    <a onClick={() => handleViewPost(post._id)}>{post.title}</a>
-                  </h3>
-                  <p className="mb-4">
-                    {post.content.length > 100
-                      ? post.content.substring(0, 100) + "..."
-                      : post.content}
-                  </p>
-                  <button
-                    onClick={() => handleViewPost(post._id)}
-                    className="btn btn-small btn-main btn-round-full"
-                  >
-                    Learn More
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))
-        )}
+    <div className="col-lg-6 col-md-6 col-sm-12 mb-5">
+      <div className="blog-item">
+        <img
+          src={`http://localhost:5000/uploads/${
+            post.image || "default_blog_post_image.png"
+          }`}
+          alt={post.title || "No title"}
+          className="img-fluid"
+          style={{ width: "600px", height: "300px", objectFit: "cover" }}
+        />
+        <div className="blog-item-content bg-white p-5">
+          <h3 className="mt-3 mb-3">
+            <a onClick={() => onView(post._id)}>
+              {post.title || "Untitled Post"}
+            </a>
+          </h3>
+          <p className="mb-4">
+            {post.content
+              ? post.content.length > 100
+                ? post.content.substring(0, 100) + "..."
+                : post.content
+              : "No content available."}
+          </p>
+
+          {isEditable ? (
+            <>
+              <button
+                onClick={() => onEdit(post._id)}
+                className="btn btn-small btn-warning ml-2"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => onDelete(post._id)}
+                className="btn btn-small btn-danger ml-2"
+              >
+                Delete
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => onView(post._id)}
+              className="btn btn-small btn-main btn-round-full"
+            >
+              Learn More
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

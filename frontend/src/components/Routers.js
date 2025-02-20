@@ -1,6 +1,5 @@
 import React from 'react';
 import {Routes, Route} from 'react-router-dom';
-import Index from '../Pages/Index';
 import Login from '../Pages/Login';
 import Register from '../Pages/Register';
 import Singlepost from '../Pages/Single_post';
@@ -11,7 +10,7 @@ import Profile from '../Pages/Profile';
 function Routers() {
   return (
     <Routes>
-      <Route path="/" element={<Index />} />
+      <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/post/:id" element={<Singlepost />} />

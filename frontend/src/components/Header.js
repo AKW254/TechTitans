@@ -54,7 +54,7 @@ const Header = () => {
           >
             <ul className="navbar-nav ml-auto">
               <li className="nav-item active float-right">
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/Home">
                   Home
                 </a>
               </li>
