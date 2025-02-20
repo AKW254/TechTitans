@@ -8,7 +8,7 @@ function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { loading, error, isAuthenticated } = useSelector(
+  const {user ,loading, error, isAuthenticated } = useSelector(
     (state) => state.auth
   ); // Get auth state from Redux
 
@@ -34,7 +34,7 @@ function Login() {
       toast.success("Login successful!"); // Show success toast
       navigate("/Home"); // Redirect on successful login
     }
-  }, [error, isAuthenticated, navigate]); // Dependencies: error, isAuthenticated, navigate
+  }, [error, isAuthenticated,user, navigate]); // Dependencies: error, isAuthenticated, navigate
 
   return (
     <>

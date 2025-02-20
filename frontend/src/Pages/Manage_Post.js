@@ -9,7 +9,9 @@ function ManagePosts() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { posts, loading, error } = useSelector((state) => state.post);
-
+ const { user } = useSelector(
+    (state) => state.auth
+  );
   useEffect(() => {
     dispatch(getPosts());
   }, [dispatch]);

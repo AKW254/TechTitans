@@ -4,23 +4,27 @@ import { getPostById } from "../store/actions/postActions";
 import { useParams } from "react-router-dom";
 import Header from "../components/Header";
 
-function Single_post() {
+function SinglePost() {
   const { id } = useParams();
   const dispatch = useDispatch();
+ 
+
   const { post, loading, error } = useSelector((state) => state.post);
- const loggedInUser = JSON.parse(localStorage.getItem("authState"));
+  const { user } = useSelector((state) => state.auth);
+
   useEffect(() => {
     dispatch(getPostById(id));
-  }, [dispatch, id]);
+  }, [id, dispatch]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-  if (!post) return <p>Post not found</p>;
-  // Determine the displayed username
-  const authorName =
-    post?.user?.username === loggedInUser?.user.username
-      ? "Me"
-      : post?.user?.username || "Unknown Author";
+  if (loading) return <div className="spinner">Loading...</div>;
+  if (error) return <div className="alert alert-danger">Error: {error}</div>;
+  if (!post) return <div className="alert alert-warning">Post not found</div>;
+
+  const isAuthor = post?.user?._id === user?._id;
+  const authorName = isAuthor ? "Me" : post?.user?.username || "Unknown Author";
+
+  
+
   return (
     <>
       <Header />
@@ -28,24 +32,21 @@ function Single_post() {
         <div className="container">
           <div className="row">
             <div className="col-lg-8 col-md-8">
-              <div className="row">
-                <div className="col-lg-12 mb-5">
-                  <div className="single-blog-item">
-                    <img
-                      src={`http://localhost:5000/uploads/${
-                        post?.image || "default_blog_post_image.png"
-                      }`}
-                      alt={post?.title || "No title available"}
-                      className="img-fluid"
-                      style={{ width: "650px", height: "360px" }}
-                    />
-                    <div className="blog-item-content bg-white p-5">
-                      <h2 className="mt-3 mb-4">
-                        {post?.title || "Untitled Post"}
-                      </h2>
-                      <p>{post?.content || "No content available."}</p>
-                    </div>
-                  </div>
+              <div className="single-blog-item">
+                <img
+                  src={`http://localhost:5000/uploads/${
+                    post?.image || "default_blog_post_image.png"
+                  }`}
+                  alt={post?.title || "No title available"}
+                  className="img-fluid"
+                  style={{ width: "650px", height: "360px" }}
+                />
+                <div className="blog-item-content bg-white p-5">
+                  <h2 className="mt-3 mb-4">
+                    {post?.title || "Untitled Post"}
+                  </h2>
+                  <p>{post?.content || "No content available."}</p>
+                  
                 </div>
               </div>
             </div>
@@ -72,4 +73,4 @@ function Single_post() {
   );
 }
 
-export default Single_post;
+export default SinglePost;

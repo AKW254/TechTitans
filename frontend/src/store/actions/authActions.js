@@ -40,16 +40,11 @@ export const loginUser = (credentials) => async (dispatch) => {
 
   try {
     const { data } = await axios.post(`${API_URL}/users/login`, credentials, {
-      withCredentials: true, // Ensure cookies are handled properly
+      withCredentials: true,
     });
 
-    const { user, token } = data;
-
-    // Store user & token in secure cookies
-    Cookies.set("token", token, { secure: true, sameSite: "Strict" });
-    Cookies.set("user", JSON.stringify(user), { secure: true, sameSite: "Strict" });
-
-    dispatch({ type: LOGIN_SUCCESS, payload: user });
+    // Dispatch success action with extracted user data
+    dispatch({ type: LOGIN_SUCCESS, payload: data.data });
   } catch (error) {
     dispatch({
       type: LOGIN_FAILURE,

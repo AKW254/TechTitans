@@ -42,7 +42,7 @@ app.use(cookieParser());
 
 // CORS Configuration
 const corsOptions = {
-  origin: process.env.CLIENT_ORIGIN || "http://localhost:3000",
+  origin: process.env.CLIENT_ORIGIN || "http://localhost:3000" || "http://localhost:3001" || "http://localhost:3002", 
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   allowedHeaders: [
     "Content-Type",

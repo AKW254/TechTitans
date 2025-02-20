@@ -1,12 +1,7 @@
 import React from "react";
 
 function Cards({ post, onView, onEdit, onDelete, isEditable }) {
-  // Ensure post is not undefined before rendering
-  if (!post) {
-    console.error("Card received an undefined post");
-    return null; // Prevents rendering an empty card
-  }
-
+ 
   return (
     <div className="col-lg-6 col-md-6 col-sm-12 mb-5">
       <div className="blog-item">
@@ -35,17 +30,141 @@ function Cards({ post, onView, onEdit, onDelete, isEditable }) {
           {isEditable ? (
             <>
               <button
-                onClick={() => onEdit(post._id)}
-                className="btn btn-small btn-warning ml-2"
+                type="button"
+                    className="btn btn-small btn-primary btn-round-full mx-2"
+                    data-toggle="modal"
+                    data-target="#editModal"
               >
                 Edit
               </button>
               <button
-                onClick={() => onDelete(post._id)}
-                className="btn btn-small btn-danger ml-2"
+                 type="button"
+                    className="btn btn-small btn-danger btn-round-full"
+                    data-toggle="modal"
+                    data-target="#deleteModal"
               >
                 Delete
               </button>
+               <div
+                  className="modal fade"
+                  id="editModal"
+                  tabIndex="-1"
+                  role="dialog"
+                  aria-labelledby="editModalLabel"
+                  aria-hidden="true"
+                >
+                  <div className="modal-dialog" role="document">
+                    <div className="modal-content">
+                      <div className="modal-header">
+                        <h5 className="modal-title" id="editModalLabel">
+                          Edit Blog Post
+                        </h5>
+                        <button
+                          type="button"
+                          className="close"
+                          data-dismiss="modal"
+                          aria-label="Close"
+                        >
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div className="modal-body">
+                        <form>
+                          <div className="form-group">
+                            <label htmlFor="title">Title</label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="title"
+                              placeholder="Enter post title"
+                            />
+                          </div>
+                          <div className="form-group">
+                            <label htmlFor="description">Description</label>
+                            <textarea
+                              className="form-control"
+                              id="description"
+                              rows="3"
+                              placeholder="Enter post description"
+                            ></textarea>
+                          </div>
+                          <div className="form-group">
+                            <label htmlFor="image">Image</label>
+                            <input
+                              type="file"
+                              className="form-control"
+                              id="image"
+                              placeholder="Enter image URL"
+                            />
+                          </div>
+                        </form>
+                      </div>
+                      <div className="modal-footer">
+                        <button
+                          type="button"
+                          className="btn btn-secondary"
+                          data-dismiss="modal"
+                        >
+                          Close
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          data-dismiss="modal"
+                        >
+                          Save changes
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  className="modal fade"
+                  id="deleteModal"
+                  tabIndex="-1"
+                  role="dialog"
+                  aria-labelledby="deleteModalLabel"
+                  aria-hidden="true"
+                >
+                  <div className="modal-dialog" role="document">
+                    <div className="modal-content">
+                      <div className="modal-header">
+                        <h5 className="modal-title" id="deleteModalLabel">
+                          Delete Blog Post
+                        </h5>
+                        <button
+                          type="button"
+                          className="close"
+                          data-dismiss="modal"
+                          aria-label="Close"
+                        >
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div className="modal-body">
+                        Are you sure you want to delete this post?
+                      </div>
+                      <div className="modal-footer">
+                        <button
+                          type="button"
+                          className="btn btn-secondary"
+                          data-dismiss="modal"
+                        >
+                          Close
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-danger"
+                          data-dismiss="modal"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              
             </>
           ) : (
             <button
