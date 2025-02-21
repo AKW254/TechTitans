@@ -40,11 +40,22 @@ export const loginUser = (credentials) => async (dispatch) => {
 
   try {
     const { data } = await axios.post(`${API_URL}/users/login`, credentials, {
-      withCredentials: true,
+      withCredentials: true, // Ensure cookies are handled properly
     });
 
-    // Dispatch success action with extracted user data
-    dispatch({ type: LOGIN_SUCCESS, payload: data.data });
+    // Assuming your API response structure is:
+    // { success: true, data: { _id, username, email }, token: "..." }
+    const { data: userData, token } = data;
+
+    // Store token in cookies with a consistent key: "jwt"
+    Cookies.set("jwt", token, { secure: true, sameSite: "Strict" });
+    // Optionally store user data in a cookie (if needed, though HTTP-only cookies are safer for tokens)
+    Cookies.set("user", JSON.stringify(userData), {
+      secure: true,
+      sameSite: "Strict",
+    });
+
+    dispatch({ type: LOGIN_SUCCESS, payload: userData });
   } catch (error) {
     dispatch({
       type: LOGIN_FAILURE,

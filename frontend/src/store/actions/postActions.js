@@ -80,23 +80,42 @@ export const getPostById = (postId) => {
   };
 };  
 
-//Update Post
-export const updatePost = (postId, postData) => {
-  return async (dispatch) => {
-    dispatch({ type: UPDATE_POST_REQUEST });
-    try {
-      const response = await axios.put(
-        `${API_URL}/posts/${postId}`,
-        postData
-      );
-      dispatch({ type: UPDATE_POST_SUCCESS, payload: response.data });
-    } catch (error) {
-      dispatch({
-        type: UPDATE_POST_FAILURE,
-        payload: error.response?.data.message || error.message,
-      });
-    }
-  };
+
+
+export const updatePost = (postId, postData) => async (dispatch, getState) => {
+  // Dispatch request action
+  dispatch({ type: UPDATE_POST_REQUEST });
+
+  // Optimistically update the state:
+  const { posts } = getState().post;
+  const currentPost = posts.find((p) => p._id === postId);
+  const optimisticPost = { ...currentPost, ...postData };
+
+  // Immediately update state with optimistic changes
+  dispatch({ type: UPDATE_POST_SUCCESS, payload: optimisticPost });
+
+  try {
+    const config = {
+      headers: { "Content-Type": "multipart/form-data" },
+      withCredentials: true,
+    };
+    // Send the update request to the server
+    const { data } = await axios.put(
+      `${API_URL}/posts/${postId}`,
+      postData,
+      config
+    );
+
+    // Confirm update by re-dispatching success with server response (if different)
+    dispatch({ type: UPDATE_POST_SUCCESS, payload: data });
+  } catch (error) {
+    // Dispatch failure action, optionally revert optimistic update or notify the user
+    dispatch({
+      type: UPDATE_POST_FAILURE,
+      payload: error.response?.data?.message || error.message,
+    });
+    // Optionally, you can re-fetch posts here or rollback state if needed
+  }
 };
 
 //Delete Post
@@ -104,7 +123,9 @@ export const deletePost = (postId) => {
   return async (dispatch) => {
     dispatch({ type: DELETE_POST_REQUEST });
     try {
-      const response = await axios.delete(`${API_URL}/posts/${postId}`);
+      const response = await axios.delete(`${API_URL}/posts/${postId}`, {
+        withCredentials: true, // Ensure cookies are handled properly
+      });
       dispatch({ type: DELETE_POST_SUCCESS, payload: response.data });
     } catch (error) {
       dispatch({

@@ -82,7 +82,7 @@ exports.getPostById = async (req, res) => {
 exports.updatePost = async (req, res) => {
   try {
     const { title, content } = req.body;
-
+    const image = req.file ? req.file.filename : null; // Handle image upload
     // Validate ID
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       return res.status(400).json({ message: "Invalid post ID" });
@@ -94,10 +94,6 @@ exports.updatePost = async (req, res) => {
       return res.status(404).json({ message: "Post not found" });
     }
 
-    // Check if the logged-in user is the owner of the post
-    if (post.user.toString() !== req.user.id) {
-      return res.status(403).json({ message: "Unauthorized action" });
-    }
 
     // Update fields
     post.title = title || post.title;
@@ -132,10 +128,7 @@ exports.deletePost = async (req, res) => {
       return res.status(404).json({ message: "Post not found" });
     }
 
-    // Check if the logged-in user is the owner of the post
-    if (post.user.toString() !== req.user.id) {
-      return res.status(403).json({ message: "Unauthorized action" });
-    }
+    
 
     await post.deleteOne();
     res.status(200).json({ message: "Post deleted successfully" });

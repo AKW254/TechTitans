@@ -1,7 +1,6 @@
 import React from "react";
 
 function Cards({ post, onView, onEdit, onDelete, isEditable }) {
- 
   return (
     <div className="col-lg-6 col-md-6 col-sm-12 mb-5">
       <div className="blog-item">
@@ -15,7 +14,7 @@ function Cards({ post, onView, onEdit, onDelete, isEditable }) {
         />
         <div className="blog-item-content bg-white p-5">
           <h3 className="mt-3 mb-3">
-            <a onClick={() => onView(post._id)}>
+            <a onClick={onView} style={{ cursor: "pointer" }}>
               {post.title || "Untitled Post"}
             </a>
           </h3>
@@ -31,144 +30,28 @@ function Cards({ post, onView, onEdit, onDelete, isEditable }) {
             <>
               <button
                 type="button"
-                    className="btn btn-small btn-primary btn-round-full mx-2"
-                    data-toggle="modal"
-                    data-target="#editModal"
+                className="btn btn-small btn-primary btn-round-full mx-2"
+                onClick={onEdit}
               >
                 Edit
               </button>
               <button
-                 type="button"
-                    className="btn btn-small btn-danger btn-round-full"
-                    data-toggle="modal"
-                    data-target="#deleteModal"
+                type="button"
+                className="btn btn-small btn-danger btn-round-full"
+                onClick={() => {
+                  if (
+                    window.confirm("Are you sure you want to delete this post?")
+                  ) {
+                    onDelete();
+                  }
+                }}
               >
                 Delete
               </button>
-               <div
-                  className="modal fade"
-                  id="editModal"
-                  tabIndex="-1"
-                  role="dialog"
-                  aria-labelledby="editModalLabel"
-                  aria-hidden="true"
-                >
-                  <div className="modal-dialog" role="document">
-                    <div className="modal-content">
-                      <div className="modal-header">
-                        <h5 className="modal-title" id="editModalLabel">
-                          Edit Blog Post
-                        </h5>
-                        <button
-                          type="button"
-                          className="close"
-                          data-dismiss="modal"
-                          aria-label="Close"
-                        >
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div className="modal-body">
-                        <form>
-                          <div className="form-group">
-                            <label htmlFor="title">Title</label>
-                            <input
-                              type="text"
-                              className="form-control"
-                              id="title"
-                              placeholder="Enter post title"
-                            />
-                          </div>
-                          <div className="form-group">
-                            <label htmlFor="description">Description</label>
-                            <textarea
-                              className="form-control"
-                              id="description"
-                              rows="3"
-                              placeholder="Enter post description"
-                            ></textarea>
-                          </div>
-                          <div className="form-group">
-                            <label htmlFor="image">Image</label>
-                            <input
-                              type="file"
-                              className="form-control"
-                              id="image"
-                              placeholder="Enter image URL"
-                            />
-                          </div>
-                        </form>
-                      </div>
-                      <div className="modal-footer">
-                        <button
-                          type="button"
-                          className="btn btn-secondary"
-                          data-dismiss="modal"
-                        >
-                          Close
-                        </button>
-                        <button
-                          type="button"
-                          className="btn btn-primary"
-                          data-dismiss="modal"
-                        >
-                          Save changes
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  className="modal fade"
-                  id="deleteModal"
-                  tabIndex="-1"
-                  role="dialog"
-                  aria-labelledby="deleteModalLabel"
-                  aria-hidden="true"
-                >
-                  <div className="modal-dialog" role="document">
-                    <div className="modal-content">
-                      <div className="modal-header">
-                        <h5 className="modal-title" id="deleteModalLabel">
-                          Delete Blog Post
-                        </h5>
-                        <button
-                          type="button"
-                          className="close"
-                          data-dismiss="modal"
-                          aria-label="Close"
-                        >
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div className="modal-body">
-                        Are you sure you want to delete this post?
-                      </div>
-                      <div className="modal-footer">
-                        <button
-                          type="button"
-                          className="btn btn-secondary"
-                          data-dismiss="modal"
-                        >
-                          Close
-                        </button>
-                        <button
-                          type="button"
-                          className="btn btn-danger"
-                          data-dismiss="modal"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              
             </>
           ) : (
             <button
-              onClick={() => onView(post._id)}
+              onClick={onView}
               className="btn btn-small btn-main btn-round-full"
             >
               Learn More

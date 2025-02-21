@@ -1,12 +1,12 @@
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
-const User = require("../models/user.js");
+const User = require("../models/user");
 
 const protect = asyncHandler(async (req, res, next) => {
   // Debugging: Log received cookies
   console.log("Cookies Received: ", req.cookies);
 
-  // Extract token from cookies
+  // Extract token from cookies using key "jwt"
   const token = req.cookies.jwt;
   console.log("Token Received: ", token);
 
@@ -18,10 +18,9 @@ const protect = asyncHandler(async (req, res, next) => {
   }
 
   try {
-    // Verify JWT without using `maxAge` in verification
+    // Verify JWT
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Debugging: Log decoded token
     console.log("Decoded Token: ", decoded);
 
     if (!decoded.userId) {
@@ -47,11 +46,9 @@ const protect = asyncHandler(async (req, res, next) => {
     // Attach user to request
     req.user = currentUser;
 
-    // Move to next middleware/route
     next();
   } catch (error) {
     console.error("JWT Verification Error: ", error);
-
     return res.status(401).json({
       success: false,
       message:
