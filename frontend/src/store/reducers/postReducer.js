@@ -47,21 +47,20 @@ export const postReducer = (state = initialState, action) => {
         error: null,
         success: true, // Set success to true when post is created
       };
-    case UPDATE_POST_SUCCESS:
+    case "UPDATE_POST_SUCCESS":
       return {
         ...state,
-        loading: false,
         posts: state.posts.map((post) =>
           post._id === action.payload._id ? action.payload : post
         ),
-        error: null,
+        loading: false,
       };
 
-    case DELETE_POST_SUCCESS:
+    case "DELETE_POST_SUCCESS":
       return {
         ...state,
-        loading: false,
         posts: state.posts.filter((post) => post._id !== action.payload),
+        loading: false,
       };
     case GET_POSTS_FAILURE:
     case SINGLE_POST_FAILURE:

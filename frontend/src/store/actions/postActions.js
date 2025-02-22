@@ -83,55 +83,68 @@ export const getPostById = (postId) => {
 
 
 export const updatePost = (postId, postData) => async (dispatch, getState) => {
-  // Dispatch request action
-  dispatch({ type: UPDATE_POST_REQUEST });
+  dispatch({ type: "UPDATE_POST_REQUEST" });
 
-  // Optimistically update the state:
+  // Optimistically update the state
   const { posts } = getState().post;
-  const currentPost = posts.find((p) => p._id === postId);
-  const optimisticPost = { ...currentPost, ...postData };
+  const updatedPosts = posts.map((post) =>
+    post._id === postId ? { ...post, ...Object.fromEntries(postData) } : post
+  );
 
-  // Immediately update state with optimistic changes
-  dispatch({ type: UPDATE_POST_SUCCESS, payload: optimisticPost });
+  dispatch({ type: "UPDATE_POST_SUCCESS", payload: updatedPosts });
 
   try {
-    const config = {
+    const { data } = await axios.put(`${API_URL}/posts/${postId}`, postData, {
       headers: { "Content-Type": "multipart/form-data" },
       withCredentials: true,
-    };
-    // Send the update request to the server
-    const { data } = await axios.put(
-      `${API_URL}/posts/${postId}`,
-      postData,
-      config
-    );
+    });
 
-    // Confirm update by re-dispatching success with server response (if different)
-    dispatch({ type: UPDATE_POST_SUCCESS, payload: data });
+    // Confirm update with server response
+    dispatch({ type: "UPDATE_POST_SUCCESS", payload: data });
   } catch (error) {
-    // Dispatch failure action, optionally revert optimistic update or notify the user
     dispatch({
-      type: UPDATE_POST_FAILURE,
+      type: "UPDATE_POST_FAILURE",
       payload: error.response?.data?.message || error.message,
     });
-    // Optionally, you can re-fetch posts here or rollback state if needed
   }
 };
 
+
 //Delete Post
-export const deletePost = (postId) => {
-  return async (dispatch) => {
-    dispatch({ type: DELETE_POST_REQUEST });
-    try {
-      const response = await axios.delete(`${API_URL}/posts/${postId}`, {
-        withCredentials: true, // Ensure cookies are handled properly
-      });
-      dispatch({ type: DELETE_POST_SUCCESS, payload: response.data });
-    } catch (error) {
-      dispatch({
-        type: DELETE_POST_FAILURE,
-        payload: error.response?.data.message || error.message,
-      });
-    }
-  };
+export const deletePost = (postId) => async (dispatch, getState) => {
+  dispatch({ type: "DELETE_POST_REQUEST" });
+
+  // Optimistically remove post from state
+  const { posts } = getState().post;
+  const filteredPosts = posts.filter((post) => post._id !== postId);
+  dispatch({ type: "DELETE_POST_SUCCESS", payload: filteredPosts });
+
+  try {
+    await axios.delete(`${API_URL}/posts/${postId}`, { withCredentials: true });
+  } catch (error) {
+    dispatch({
+      type: "DELETE_POST_FAILURE",
+      payload: error.response?.data?.message || error.message,
+    });
+  }
 };
+
+// Update a single post in the Redux store
+export const updatePostInStore =
+  (postId, updatedData) => (dispatch, getState) => {
+    const { posts } = getState().post;
+    const newPosts = posts.map((post) =>
+      post._id === postId ? { ...post, ...updatedData } : post
+    );
+
+    dispatch({ type: GET_POSTS_SUCCESS, payload: newPosts });
+  };
+
+
+
+// Remove a post from the Redux store
+export const removePostFromStore = (postId) => (dispatch, getState) => {
+  const { posts } = getState().post;
+  dispatch({ type: GET_POSTS_SUCCESS, payload: posts.filter((post) => post._id !== postId) });
+};
+

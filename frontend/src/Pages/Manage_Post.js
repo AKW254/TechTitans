@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getPosts, deletePost, updatePost } from "../store/actions/postActions";
+import {
+  getPosts,
+  deletePost,
+  updatePost,
+  updatePostInStore,
+  removePostFromStore,
+} from "../store/actions/postActions";
 import Cards from "../components/Cards";
 import Header from "../components/Header";
 import { toast } from "react-toastify";
@@ -14,7 +20,7 @@ function ManagePosts() {
 
   useEffect(() => {
     dispatch(getPosts());
-  }, [dispatch]);
+  }, [dispatch]); // Add `posts` dependency to re-render when updated
 
   // State for editing a post
   const [formData, setFormData] = useState({
@@ -50,6 +56,7 @@ function ManagePosts() {
     if (formData.image) postData.append("image", formData.image);
 
     dispatch(updatePost(editPostId, postData));
+    dispatch(updatePostInStore(editPostId, formData)); // ✅ Pass updated data
     toast.success("Post updated successfully!");
     setFormData({ title: "", content: "", image: null });
     setEditPostId(null);
@@ -66,8 +73,8 @@ function ManagePosts() {
 
   const handleDeletePost = (postId) => {
     dispatch(deletePost(postId));
+    dispatch(removePostFromStore(postId)); // Remove post from Redux store
     toast.success("Post deleted successfully!");
-    
   };
 
   return (
@@ -92,7 +99,7 @@ function ManagePosts() {
                 onView={() => navigate(`/post/${post._id}`)}
                 onEdit={() => handleEditPost(post)}
                 onDelete={() => handleDeletePost(post._id)}
-                isEditable={ true }
+                isEditable={true}
               />
             ))
           )}

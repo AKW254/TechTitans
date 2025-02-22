@@ -19,7 +19,7 @@ const Profile = () => {
     username: "",
     email: "",
   });
-
+5
   // Redirect unauthenticated users
   useEffect(() => {
     if (!isAuthenticated) {
