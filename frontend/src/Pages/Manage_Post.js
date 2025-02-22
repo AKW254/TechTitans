@@ -37,9 +37,12 @@ function ManagePosts() {
   };
 
   // Handle file input separately
-  const handleFileChange = (e) => {
-    setFormData({ ...formData, image: e.target.files[0] });
-  };
+ const handleFileChange = (e) => {
+   if (e.target.files.length > 0) {
+     setFormData({ ...formData, image: e.target.files[0] });
+   }
+ };
+
 
   // Handle form submission for updating a post
   const handleSubmit = (e) => {
@@ -67,7 +70,7 @@ function ManagePosts() {
     setFormData({
       title: post.title,
       content: post.content,
-      image: null,
+      image: post.image,
     });
   };
 

@@ -141,7 +141,6 @@ export const updatePostInStore =
   };
 
 
-
 // Remove a post from the Redux store
 export const removePostFromStore = (postId) => (dispatch, getState) => {
   const { posts } = getState().post;

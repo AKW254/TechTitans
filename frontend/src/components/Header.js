@@ -16,8 +16,8 @@ const Header = () => {
     if (!isAuthenticated && persistor.getState().bootstrapped) {
       navigate("/login");
     }
-    if (isAuthenticated && user?.data?.username) {
-      setUsername(user.data.username); // Updates username immediately on login
+    if (isAuthenticated && user.username) {
+      setUsername(user.username); // Updates username immediately on login
     }
   }, [isAuthenticated, user, navigate]);
 
