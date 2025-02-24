@@ -133,12 +133,20 @@ export const deletePost = (postId) => async (dispatch, getState) => {
 export const updatePostInStore =
   (postId, updatedData) => (dispatch, getState) => {
     const { posts } = getState().post;
+
     const newPosts = posts.map((post) =>
-      post._id === postId ? { ...post, ...updatedData } : post
+      post._id === postId
+        ? {
+            ...post,
+            ...updatedData,
+            image: updatedData.image?.name || post.image,
+          }
+        : post
     );
 
     dispatch({ type: GET_POSTS_SUCCESS, payload: newPosts });
   };
+
 
 
 // Remove a post from the Redux store

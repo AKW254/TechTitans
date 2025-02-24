@@ -42,7 +42,11 @@ app.use(cookieParser());
 
 // CORS Configuration
 const corsOptions = {
-  origin: process.env.CLIENT_ORIGIN || "http://localhost:3000" || "http://localhost:3001" || "http://localhost:3002", 
+  origin: [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "http://localhost:3002",
+  ],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   allowedHeaders: [
     "Content-Type",
@@ -52,8 +56,9 @@ const corsOptions = {
     "Origin",
   ],
   credentials: true,
-  optionsSuccessStatus: 204, // Prevents CORS preflight issues
+  optionsSuccessStatus: 204,
 };
+
 
 app.use(cors(corsOptions));
 
@@ -101,11 +106,15 @@ if (environment === "production") {
   app.use(
     "/uploads",
     express.static(path.join(__dirname, "uploads"), {
+      maxAge: 0, // Disable caching
       setHeaders: (res, path) => {
-        res.set("Cross-Origin-Resource-Policy", "same-site"); // Allow same-site requests
+        res.set("Cross-Origin-Resource-Policy", "cross-origin");
+        res.set("Cache-Control", "no-store, must-revalidate"); // Prevent caching
       },
     })
   );
+
+
   app.get("/", (req, res) => {
     res.json({
       status: "API Running",
