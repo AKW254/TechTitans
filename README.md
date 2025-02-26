@@ -1,13 +1,11 @@
-Below is an updated README in Markdown for your TitanTech Blog project. Replace all placeholder URLs and text with your actual project details.
 
-```markdown
-# TitanTech Blog
+# TechTitans Blog
 
-![TitanTech Logo](https://your-logo-url.com/logo.png)
+![TechTitans Logo](Screenshots/home.png)
 
-TitanTech Blog is a modern tech blog that covers the latest trends, tutorials, and news in technology. Whether you're a developer, tech enthusiast, or simply curious about the future of tech, TitanTech Blog has something for you.
+TechTitans Blog is a modern tech blog that covers the latest trends, tutorials, and news in technology. Whether you're a developer, tech enthusiast, or simply curious about the future of tech, TechTitans Blog has something for you.
 
-[View Demo](#) · [Report Bug](#) · [Request Feature](#)
+
 
 ---
 
@@ -31,9 +29,8 @@ TitanTech Blog is a modern tech blog that covers the latest trends, tutorials, a
 
 ## About The Project
 
-![Blog Screenshot](https://your-screenshot-url.com/screenshot1.png)
 
-TitanTech Blog is a tech blog platform built to provide engaging, insightful, and timely content about technology. This blog offers articles, tutorials, and industry news to help you stay updated in the fast-paced world of tech.
+TechTitans Blog is a tech blog platform built to provide engaging, insightful, and timely content about technology. This blog offers articles, tutorials, and industry news to help you stay updated in the fast-paced world of tech.
 
 **Key Features:**
 - Responsive design with a mobile-first approach
@@ -77,13 +74,13 @@ npm install npm@latest -g
 1. **Clone the repository:**
 
    ```sh
-   git clone https://github.com/yourusername/titantech-blog.git
+   git clone https://github.com/AKW254/TechTitans.git
    ```
 
 2. **Navigate to the project directory:**
 
    ```sh
-   cd titantech-blog
+   cd TechTitans
    ```
 
 3. **Install dependencies:**
@@ -97,7 +94,7 @@ npm install npm@latest -g
    ```sh
    NODE_ENV=production
    PORT=5000
-   MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/TitanTechBlog?retryWrites=true&w=majority
+   MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/TechTitansBlog?retryWrites=true&w=majority
    JWT_SECRET=your_secret_key
    JWT_EXPIRES_IN=1d
    ```
@@ -131,14 +128,19 @@ For full API documentation, please refer to the docs in the repository.
 
 ## Screenshots
 
-### Main Screen
-![Main Screen](https://your-screenshot-url.com/screenshot2.png)
+### Sign up Screen
+![TechTitans Logo](Screenshots/signup.png)
+### Sign In Screen
+![TechTitans Logo](Screenshots/login.png)
+### Home Screen
+![TechTitans Logo](Screenshots/home.png)
+### Single Post  Screen
+![TechTitans Logo](Screenshots/single post.png)
+### Create Post Screen
+![TechTitans Logo](Screenshots/create post.png)
+### Manage Posts Screen
+![TechTitans Logo](Screenshots/manage post.png)
 
-### Article Page
-![Article Page](https://your-screenshot-url.com/screenshot3.png)
-
-### API Testing with Postman
-![API Testing](https://your-screenshot-url.com/screenshot4.png)
 
 [Back to top](#table-of-contents)
 
@@ -151,7 +153,7 @@ For full API documentation, please refer to the docs in the repository.
 - [ ] Implement role-based access control for authors and admins
 - [ ] Deploy a complete frontend with React
 
-[See open issues](https://github.com/yourusername/titantech-blog/issues)
+[See open issues](https://github.com/AKW254/TechTitans/issues)
 
 [Back to top](#table-of-contents)
 
@@ -167,7 +169,7 @@ Contributions are welcome! To contribute:
 4. Push to the branch (`git push origin feature/new-feature`).
 5. Open a pull request.
 
-[![Contributors](https://contrib.rocks/image?repo=yourusername/titantech-blog)](https://github.com/yourusername/titantech-blog/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=AKW254/TechTitans)](https://github.com/AKW254/TechTitans/graphs/contributors)
 
 [Back to top](#table-of-contents)
 
@@ -185,7 +187,7 @@ Distributed under the MIT License. See `LICENSE` for details.
 
 Antony Kilonzo Wambua - [LinkedIn](https://www.linkedin.com/in/antony-wambua-293459265/) - [GitHub](https://github.com/AKW254) - kilonzowambua254@gmail.com
 
-Project Link: [TitanTech Blog Repo](https://github.com/yourusername/titantech-blog)
+Project Link: [TechTitans Blog Repo](https://github.com/AKW254/TechTitans)
 
 [Back to top](#table-of-contents)
 
@@ -193,10 +195,10 @@ Project Link: [TitanTech Blog Repo](https://github.com/yourusername/titantech-bl
 
 ## Contributors, Forks, Stargazers, Issues
 
-- **Contributors:** [![Contributors](https://contrib.rocks/image?repo=yourusername/titantech-blog)](https://github.com/yourusername/titantech-blog/graphs/contributors)
-- **Forks:** [![Forks](https://img.shields.io/github/forks/yourusername/titantech-blog?style=social)](https://github.com/yourusername/titantech-blog/network/members)
-- **Stargazers:** [![Stargazers](https://img.shields.io/github/stars/yourusername/titantech-blog?style=social)](https://github.com/yourusername/titantech-blog/stargazers)
-- **Issues:** [![Issues](https://img.shields.io/github/issues/yourusername/titantech-blog)](https://github.com/yourusername/titantech-blog/issues)
+- **Contributors:** [![Contributors](https://contrib.rocks/image?repo=AKW254/TechTitans)](https://github.com/AKW254/TechTitans/graphs/contributors)
+- **Forks:** [![Forks](https://img.shields.io/github/forks/AKW254/TechTitans?style=social)](https://github.com/AKW254/TechTitans/network/members)
+- **Stargazers:** [![Stargazers](https://img.shields.io/github/stars/AKW254/TechTitans?style=social)](https://github.com/AKW254/TechTitans/stargazers)
+- **Issues:** [![Issues](https://img.shields.io/github/issues/AKW254/TechTitans)](https://github.com/AKW254/TechTitans/issues)
 - **License:** ![License](https://img.shields.io/badge/License-MIT-blue.svg)
 - **LinkedIn:** [![LinkedIn](https://img.shields.io/badge/LinkedIn-Antony-blue)](https://www.linkedin.com/in/antony-wambua-293459265)
 
@@ -217,4 +219,4 @@ Project Link: [TitanTech Blog Repo](https://github.com/yourusername/titantech-bl
 [Back to top](#table-of-contents)
 ```
 
-Make sure to replace the placeholder URLs, repository names, and any other details with your actual project data. This updated README provides a comprehensive overview of your TitanTech Blog project for GitHub.
+Make sure to replace the placeholder URLs, repository names, and any other details with your actual project data. This updated README provides a comprehensive overview of your TechTitans Blog project for GitHub.
