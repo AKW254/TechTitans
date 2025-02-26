@@ -92,8 +92,8 @@ npm install npm@latest -g
 4. **Create a `.env` file** in the root directory and add the following environment variables:
 
    ```sh
-   NODE_ENV=production
-   PORT=5000
+   NODE_ENV=
+   PORT=
    MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/TechTitansBlog?retryWrites=true&w=majority
    JWT_SECRET=your_secret_key
    JWT_EXPIRES_IN=1d
