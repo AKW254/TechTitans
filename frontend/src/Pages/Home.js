@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getPosts, deletePost } from "../store/actions/postActions";
+import { getPosts } from "../store/actions/postActions";
 import Cards from "../components/Cards";
 import Header from "../components/Header";
 
@@ -15,7 +15,7 @@ function HomePage() {
     }, [dispatch]);
 
   const handleViewPost = (postId) => {
-    navigate(`/post/${postId}`);
+    navigate(`/Singlepost/${postId}`);
   };
 
   return (

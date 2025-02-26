@@ -13,7 +13,7 @@ function Routers() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/post/:id" element={<Singlepost />} />
+      <Route path="/Singlepost/:id" element={<Singlepost />} />
       <Route path="/Create Post" element={<CreatePost />} />
       <Route path="/Manage Post" element={<ManagePost />} />
       <Route path="/Home" element={<Home />} />

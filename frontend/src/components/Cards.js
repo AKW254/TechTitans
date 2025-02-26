@@ -51,7 +51,7 @@ function Cards({ post, onView, onEdit, onDelete, isEditable }) {
             </>
           ) : (
             <button
-              onClick={onView}
+              onClick={() => onView(post._id)}
               className="btn btn-small btn-main btn-round-full"
             >
               Learn More
