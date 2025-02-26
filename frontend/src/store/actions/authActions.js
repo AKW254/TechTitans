@@ -8,9 +8,7 @@ import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
-  GET_USER_REQUEST,
-  GET_USER_SUCCESS,
-  GET_USER_FAILURE,
+
   LOGOUT,
   PROFILE_UPDATE_REQUEST,
   PROFILE_UPDATE_SUCCESS,
@@ -75,26 +73,7 @@ export const logoutUser = () => (dispatch) => {
   window.location.href = "/login"; // Redirect user
 };
 
-// Get User Info
-export const getUserInfo = () => async (dispatch) => {
-  dispatch({ type: GET_USER_REQUEST });
 
-  try {
-    const { data } = await axios.get(`${API_URL}/users/profile`, {
-      withCredentials: true,
-    });
-
-    dispatch({ type: GET_USER_SUCCESS, payload: data });
-  } catch (error) {
-    const errorMessage = error.response?.data?.message || "Failed to fetch user info";
-
-    if (error.response?.status === 401) {
-      dispatch(logoutUser()); // If unauthorized, logout user
-    }
-
-    dispatch({ type: GET_USER_FAILURE, payload: errorMessage });
-  }
-};
 
 // Update Profile
 export const updateProfile = (formData) => async (dispatch, getState) => {

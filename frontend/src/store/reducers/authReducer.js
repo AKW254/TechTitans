@@ -6,8 +6,6 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
   LOGOUT,
-  GET_USER_REQUEST,
-  GET_USER_SUCCESS,
   GET_USER_FAILURE,
   PROFILE_UPDATE_REQUEST,
   PROFILE_UPDATE_SUCCESS,
@@ -26,7 +24,6 @@ const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case REGISTER_REQUEST:
     case LOGIN_REQUEST:
-    case GET_USER_REQUEST:
     case PROFILE_UPDATE_REQUEST:
       return { ...state, loading: true, error: null };
 
@@ -40,15 +37,7 @@ const authReducer = (state = initialState, action) => {
         error: null,
       };
       
-    case GET_USER_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        user: action.payload,
-        isAuthenticated: true,
-        error: null,
-      };
-
+    
     case PROFILE_UPDATE_SUCCESS:
       return {
         ...state,
@@ -59,7 +48,7 @@ const authReducer = (state = initialState, action) => {
 
     case REGISTER_FAILURE:
     case LOGIN_FAILURE:
-    case GET_USER_FAILURE:
+    
     case PROFILE_UPDATE_FAIL:
       return { ...state, loading: false, error: action.payload };
 

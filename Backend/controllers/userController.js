@@ -88,25 +88,7 @@ const logout = (req, res) => {
   res.status(200).json({ message: "Logged out successfully" });
 };
 
-// @desc    Get user profile
-// @route   GET /api/users/profile
-// @access  Private
-// @route   GET /api/users/profile
-// @access  Private
-const getUserProfile = asyncHandler(async (req, res) => {
-  // User is already attached to req by protect middleware
-  const user = req.user;
 
-  res.status(200).json({
-    success: true,
-   
-      id: user._id,
-      username: user.username,
-      email: user.email,
-      createdAt: user.createdAt,
-   
-  });
-});
 
 // @desc    Update user profile
 // @route   PUT /api/users/profile
@@ -143,6 +125,5 @@ module.exports = {
   login,
   register,
   logout,
-  getUserProfile,
   updateUserProfile,
 };

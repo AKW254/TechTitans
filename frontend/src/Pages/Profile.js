@@ -2,32 +2,39 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { getUserInfo, updateProfile } from "../store/actions/authActions";
+import { logoutUser, updateProfile } from "../store/actions/authActions";
 import Header from "../components/Header";
-
+import { persistor } from "../store/config"; // Import persistor
 
 const Profile = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+  const { user, isAuthenticated ,loading, error} = useSelector((state) => state.auth);
 
-  const { user, loading, isAuthenticated, error } = useSelector(
-    (state) => state.auth
-  );
 
+  // Local state for username (ensures immediate UI update)
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
     email: "",
   });
-5
-  // Redirect unauthenticated users
+
+
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated && persistor.getState().bootstrapped) {
       navigate("/login");
-    } else {
-      dispatch(getUserInfo());
     }
-  }, [dispatch, isAuthenticated, navigate]);
+    if (isAuthenticated) {
+      
+    }
+  }, [isAuthenticated, user, navigate]);
+
+  const handleNavigation = (path) => navigate(path);
+
+  const handleLogout = async () => {
+    await dispatch(logoutUser());
+    navigate("/");
+  };
 
   // Sync formData with user state
   useEffect(() => {
