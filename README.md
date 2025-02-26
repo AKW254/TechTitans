@@ -135,11 +135,11 @@ For full API documentation, please refer to the docs in the repository.
 ### Home Screen
 ![TechTitans Logo](Screenshots/home.png)
 ### Single Post  Screen
-![TechTitans Logo](Screenshots/single post.png)
+![TechTitans Logo](Screenshots/singlepost.png)
 ### Create Post Screen
-![TechTitans Logo](Screenshots/create post.png)
+![TechTitans Logo](Screenshots/createpost.png)
 ### Manage Posts Screen
-![TechTitans Logo](Screenshots/manage post.png)
+![TechTitans Logo](Screenshots/managepost.png)
 
 
 [Back to top](#table-of-contents)
