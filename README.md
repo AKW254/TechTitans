@@ -217,6 +217,6 @@ Project Link: [TechTitans Blog Repo](https://github.com/AKW254/TechTitans)
 - [GitHub Pages](https://pages.github.com/)
 
 [Back to top](#table-of-contents)
-```
+
 
 
