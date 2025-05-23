@@ -1,18 +1,21 @@
-const path = require("path");
-const express = require("express");
-const dotenv = require("dotenv");
-const connectDB = require("./config/db.js");
-const cookieParser = require("cookie-parser");
-const { notFound, errorHandler } = require("./middleware/errorMiddleware.js");
-const userRoutes = require("./routes/userRoutes.js");
-const postRoutes = require("./routes/postRoutes.js");
-const cors = require("cors");
-const helmet = require("helmet");
-const mongoSanitize = require("express-mongo-sanitize");
-const hpp = require("hpp");
-const rateLimit = require("express-rate-limit");
-const compression = require("compression");
+import path from "path";
+import express from "express";
+import dotenv from "dotenv";
+import connectDB from "./config/db.js";
+import cookieParser from "cookie-parser";
+import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
+import userRoutes from "./routes/userRoutes.js";
+import postRoutes from "./routes/postRoutes.js";
+import cors from "cors";
+import helmet from "helmet";
+import mongoSanitize from "express-mongo-sanitize";
+import hpp from "hpp";
+import rateLimit from "express-rate-limit";
+import compression from "compression";
+ import { fileURLToPath } from "url";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 dotenv.config();
 
 const port = process.env.PORT || 5000;
@@ -68,10 +71,11 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Development vs Production Middleware
+import morgan from "morgan";
+
 if (environment === "development") {
-  const morgan = require("morgan");
   app.use(morgan("dev"));
-  app.use((req, res, next) => {
+  app.use((req, _res, next) => {
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
     next();
   });
@@ -93,18 +97,19 @@ app.use("/api/posts", apiLimiter, postRoutes);
 
 // Serve static files for uploads
 if (environment === "production") {
-  const __dirname = path.resolve();
+ 
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
   app.use(
     "/uploads",
     express.static(path.join(__dirname, "uploads"), {
       maxAge: 31557600000, // 1 year cache
-      setHeaders: (res, path) => {
-        res.set("Cross-Origin-Resource-Policy", "same-site"); // Allow same-site requests
+      setHeaders: (_res, _path) => {
+        _res.set("Cross-Origin-Resource-Policy", "same-site"); // Allow same-site requests
       },
     })
   );
   // SPA Fallback
-  app.get("*", (req, res) => {
+  app.get("*", (_req, res) => {
     res.set("Cache-Control", "public, max-age=604800"); // 1 week cache
     res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
   });
@@ -113,15 +118,15 @@ if (environment === "production") {
     "/uploads",
     express.static(path.join(__dirname, "uploads"), {
       maxAge: 0, // Disable caching
-      setHeaders: (res, path) => {
-        res.set("Cross-Origin-Resource-Policy", "cross-origin");
-        res.set("Cache-Control", "no-store, must-revalidate"); // Prevent caching
+      setHeaders: (_res, _path) => {
+        _res.set("Cross-Origin-Resource-Policy", "cross-origin");
+        _res.set("Cache-Control", "no-store, must-revalidate"); // Prevent caching
       },
     })
   );
 
 
-  app.get("/", (req, res) => {
+  app.get("/", (_req, res) => {
     res.json({
       status: "API Running",
       environment,
