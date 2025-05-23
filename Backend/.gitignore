@@ -40,5 +40,4 @@ Thumbs.db
 *.bak
 
 # Package distribution
-package-lock.json
 yarn.lock

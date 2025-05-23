@@ -23,7 +23,12 @@ connectDB();
 const app = express();
 
 // Security Middleware
-app.use(helmet());
+if (environment === 'production') {
+  app.use(helmet({
+contentSecurityPolicy: false,
+crossOriginEmbedderPolicy: false
+  }));
+}
 app.use(mongoSanitize());
 app.use(hpp());
 
@@ -73,6 +78,7 @@ if (environment === "development") {
 } else {
   app.use(compression());
 }
+
 
 // API Routes
 app.use("/api/users", apiLimiter, userRoutes);
