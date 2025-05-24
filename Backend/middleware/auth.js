@@ -1,8 +1,8 @@
-const jwt = require("jsonwebtoken");
-const asyncHandler = require("express-async-handler");
-const User = require("../models/user");
+import jwt from "jsonwebtoken";
+import asyncHandler from "express-async-handler";
+import User from "../models/user.js";
 
-const protect = asyncHandler(async (req, res, next) => {
+export const protect = asyncHandler(async (req, res, next) => {
   // Debugging: Log received cookies
   console.log("Cookies Received: ", req.cookies);
 
@@ -59,5 +59,3 @@ const protect = asyncHandler(async (req, res, next) => {
     });
   }
 });
-
-module.exports = { protect };

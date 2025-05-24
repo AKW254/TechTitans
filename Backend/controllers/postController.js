@@ -1,9 +1,9 @@
-const Post = require("../models/post"); // Post model
-const mongoose = require("mongoose");
-const multer = require("multer");
+import Post from "../models/post.js"; // Post model
+import mongoose from "mongoose";
+import multer from "multer";
 
 // Create a new post
-exports.createPost = async (req, res) => {
+export const createPost = async (req, res) => {
   try {
     const { title, content } = req.body;
     const image = req.file ? req.file.filename : null; // Handle image upload
@@ -38,7 +38,7 @@ exports.createPost = async (req, res) => {
 };
 
 // Get all posts
-exports.getAllPosts = async (req, res) => {
+export const getAllPosts = async (req, res) => {
   try {
     const posts = await Post.find()
       .populate("user", "username") // Populate user field with username
@@ -53,7 +53,7 @@ exports.getAllPosts = async (req, res) => {
 };
 
 // Get a single post by ID
-exports.getPostById = async (req, res) => {
+export const getPostById = async (req, res) => {
   try {
     // Validate ID
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -79,7 +79,7 @@ exports.getPostById = async (req, res) => {
 };
 
 // Update a post
-exports.updatePost = async (req, res) => {
+export const updatePost = async (req, res) => {
   try {
     const { title, content } = req.body;
     const image = req.file ? req.file.filename : null; // Handle image upload
@@ -93,7 +93,6 @@ exports.updatePost = async (req, res) => {
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
     }
-
 
     // Update fields
     post.title = title || post.title;
@@ -115,7 +114,7 @@ exports.updatePost = async (req, res) => {
 };
 
 // Delete a post
-exports.deletePost = async (req, res) => {
+export const deletePost = async (req, res) => {
   try {
     // Validate ID
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -128,8 +127,6 @@ exports.deletePost = async (req, res) => {
       return res.status(404).json({ message: "Post not found" });
     }
 
-    
-
     await post.deleteOne();
     res.status(200).json({ message: "Post deleted successfully" });
   } catch (error) {
@@ -139,3 +136,4 @@ exports.deletePost = async (req, res) => {
       .json({ message: "Error deleting post", error: error.message });
   }
 };
+

@@ -1,16 +1,17 @@
-const express = require("express");
-const router = express.Router();
-const { protect } = require("../middleware/auth");
-const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
-const {
+import express from "express";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import { protect } from "../middleware/auth.js";
+import {
   createPost,
   getAllPosts,
   getPostById,
   updatePost,
   deletePost,
-} = require("../controllers/postController");
+} from "../controllers/postController.js";
+
+const router = express.Router();
 
 // Ensure "uploads/" directory exists
 const uploadDir = "uploads/";
@@ -38,4 +39,4 @@ router.get("/:id", getPostById);
 router.put("/:id", protect, upload.single("image"), updatePost);
 router.delete("/:id", protect, deletePost);
 
-module.exports = router;
+export default router;

@@ -1,11 +1,11 @@
-const asyncHandler = require("express-async-handler");
-const User = require("../models/user.js");
-const generateToken = require("../utils/generateToken.js");
+import asyncHandler from "express-async-handler";
+import User from "../models/user.js";
+import generateToken from "../utils/generateToken.js";
 
 // @desc    Auth user & get token
 // @route   POST /api/users/auth
 // @access  Public
-const login = asyncHandler(async (req, res) => {
+export const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   console.log("Login request received:", email, password);
@@ -45,7 +45,7 @@ const login = asyncHandler(async (req, res) => {
 // @desc    Register a new user
 // @route   POST /api/users
 // @access  Public
-const register = asyncHandler(async (req, res) => {
+export const register = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
 
   const userExists = await User.findOne({ email });
@@ -80,7 +80,7 @@ const register = asyncHandler(async (req, res) => {
 // @desc    Logout user / clear cookie
 // @route   POST /api/users/logout
 // @access  Public
-const logout = (req, res) => {
+export const logout = (req, res) => {
   res.cookie("jwt", "", {
     httpOnly: true,
     expires: new Date(0),
@@ -88,12 +88,10 @@ const logout = (req, res) => {
   res.status(200).json({ message: "Logged out successfully" });
 };
 
-
-
 // @desc    Update user profile
 // @route   PUT /api/users/profile
 // @access  Private
-const updateUserProfile = asyncHandler(async (req, res) => {
+export const updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
   if (user) {
@@ -106,10 +104,9 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 
     const updatedUser = await user.save();
 
-   
     res.json({
       _id: updatedUser._id,
-      username: updatedUser.username, 
+      username: updatedUser.username,
       email: updatedUser.email,
     });
   } else {
@@ -117,13 +114,3 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     throw new Error("User not found");
   }
 });
-
-
-
-// Export the controllers
-module.exports = {
-  login,
-  register,
-  logout,
-  updateUserProfile,
-};

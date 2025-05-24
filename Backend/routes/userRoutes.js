@@ -1,14 +1,14 @@
-const express = require("express");
-const router = express.Router();
-const {
+import express from "express";
+import rateLimit from "express-rate-limit";
+import {
   login,
   register,
   logout,
- 
   updateUserProfile,
-} = require("../controllers/userController");
-const { protect } = require("../middleware/auth");
-const rateLimit = require("express-rate-limit");
+} from "../controllers/userController.js";
+import { protect } from "../middleware/auth.js";
+
+const router = express.Router();
 
 // Rate limiting for authentication routes
 const authLimiter = rateLimit({
@@ -27,4 +27,4 @@ router
   .route("/profile")
   .put(protect, updateUserProfile); // PUT /api/users/profile
 
-module.exports = router;
+export default router;
