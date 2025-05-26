@@ -12,35 +12,40 @@ import mongoSanitize from "express-mongo-sanitize";
 import hpp from "hpp";
 import rateLimit from "express-rate-limit";
 import compression from "compression";
- import { fileURLToPath } from "url";
+import { fileURLToPath } from "url";
+import morgan from "morgan";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-dotenv.config();
 
+dotenv.config();
 const port = process.env.PORT || 5000;
 const environment = process.env.NODE_ENV || "development";
 
 connectDB();
 
 const app = express();
+app.set("trust proxy", 1);
 
 // Security Middleware
-if (environment === 'production') {
-  app.use(helmet({
-contentSecurityPolicy: false,
-crossOriginEmbedderPolicy: false
-  }));
+if (environment === "production") {
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+      crossOriginEmbedderPolicy: false,
+    })
+  );
 }
 app.use(mongoSanitize());
 app.use(hpp());
 
 // Rate Limiting
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000, // Limit each IP to 500 requests per windowMs
-  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  windowMs: 15 * 60 * 1000,
+  max: 1000,
+  standardHeaders: true,
+  legacyHeaders: false,
+  validate: { trustProxy: true },
 });
 
 // Body Parsers
@@ -66,13 +71,9 @@ const corsOptions = {
   credentials: true,
   optionsSuccessStatus: 204,
 };
-
-
 app.use(cors(corsOptions));
 
 // Development vs Production Middleware
-import morgan from "morgan";
-
 if (environment === "development") {
   app.use(morgan("dev"));
   app.use((req, _res, next) => {
@@ -83,49 +84,45 @@ if (environment === "development") {
   app.use(compression());
 }
 
-
 // API Routes
 app.use("/api/users", apiLimiter, userRoutes);
+
 const loginLimiter = rateLimit({
   windowMs: 5 * 60 * 1000, // 5 minutes
-  max: 10, // Only allow 10 attempts in 5 minutes
+  max: 10,
   message: "Too many login attempts, please try again later.",
 });
 app.use("/api/users/login", loginLimiter);
-
 app.use("/api/posts", apiLimiter, postRoutes);
 
 // Serve static files for uploads
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"), {
+    maxAge: environment === "production" ? 31557600000 : 0,
+    setHeaders: (_res, _path) => {
+      _res.set(
+        "Cross-Origin-Resource-Policy",
+        environment === "production" ? "same-site" : "cross-origin"
+      );
+      if (environment !== "production") {
+        _res.set("Cache-Control", "no-store, must-revalidate");
+      }
+    },
+  })
+);
+
+// Serve frontend in production
 if (environment === "production") {
- 
-  const __dirname = path.dirname(fileURLToPath(import.meta.url));
-  app.use(
-    "/uploads",
-    express.static(path.join(__dirname, "uploads"), {
-      maxAge: 31557600000, // 1 year cache
-      setHeaders: (_res, _path) => {
-        _res.set("Cross-Origin-Resource-Policy", "same-site"); // Allow same-site requests
-      },
-    })
-  );
+  // Serve static frontend build
+  app.use(express.static(path.join(__dirname, "frontend", "build")));
+
   // SPA Fallback
   app.get("*", (_req, res) => {
-    res.set("Cache-Control", "public, max-age=604800"); // 1 week cache
-    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
   });
 } else {
-  app.use(
-    "/uploads",
-    express.static(path.join(__dirname, "uploads"), {
-      maxAge: 0, // Disable caching
-      setHeaders: (_res, _path) => {
-        _res.set("Cross-Origin-Resource-Policy", "cross-origin");
-        _res.set("Cache-Control", "no-store, must-revalidate"); // Prevent caching
-      },
-    })
-  );
-
-
+  // Development fallback route
   app.get("/", (_req, res) => {
     res.json({
       status: "API Running",
@@ -144,6 +141,7 @@ const server = app.listen(port, () => {
   console.log(`Server running in ${environment} mode on port ${port}`);
 });
 
+// Global unhandledRejection handler
 process.on("unhandledRejection", (err) => {
   console.error(`Error: ${err.message}`);
   server.close(() => process.exit(1));
