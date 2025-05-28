@@ -1,16 +1,20 @@
+// The Login component handles user authentication by providing a form for users to input their email and password.
+// It interacts with Redux for state management and redirects authenticated users to the home page.
+
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../store/actions/authActions";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+const HOME_ROUTE = "/Home"; // Define route constant
 
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const {user ,loading, error, isAuthenticated } = useSelector(
+  const { error, isAuthenticated, loading } = useSelector(
     (state) => state.auth
-  ); // Get auth state from Redux
+  ); // Get auth state from Redux, including loading
 
   const [credentials, setCredentials] = useState({
     email: "",
@@ -19,22 +23,26 @@ function Login() {
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
-  };
+  }; // Used in form inputs
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!credentials.email || !credentials.password) {
+      toast.error("Please fill in both email and password fields."); // Show validation error
+      return;
+    }
     dispatch(loginUser(credentials)); // Dispatch the login action
-  };
+  }; // Used in form submission
 
   useEffect(() => {
     if (error) {
-      toast.error(error); // Show error toast
+      toast.error(`Login failed: ${error}`); // Show error toast with context
     }
     if (isAuthenticated) {
       toast.success("Login successful!"); // Show success toast
-      navigate("/Home"); // Redirect on successful login
+      navigate(HOME_ROUTE); // Redirect on successful login
     }
-  }, [error, isAuthenticated,user, navigate]); // Dependencies: error, isAuthenticated, navigate
+  }, [error, isAuthenticated, navigate]); // Dependencies: error, isAuthenticated, navigate
 
   return (
     <>
@@ -43,7 +51,7 @@ function Login() {
           {loading && <p>Loading...</p>}
           <div className="col-lg-6 d-none d-lg-flex align-items-center justify-content-center">
             <img
-              src="images/Computer login-rafiki.svg" // Replace with your illustration/image URL
+              src="images/Computer login-rafiki.svg" // Illustration for the login page to enhance user experience
               alt="Illustration"
               className="img-fluid"
             />
@@ -76,7 +84,7 @@ function Login() {
                       className="form-control"
                       id="password"
                       placeholder="Enter your password"
-                      name="password" // Fixed missing "name" attribute
+                      name="password"
                       value={credentials.password}
                       onChange={handleChange}
                     />
@@ -84,7 +92,7 @@ function Login() {
 
                   <div className="d-flex justify-content-between mb-3">
                     <button
-                      type="submit" // Added type="submit"
+                      type="submit"
                       className="btn btn-small btn-main btn-round-full"
                       disabled={loading} // Disable button during loading
                     >

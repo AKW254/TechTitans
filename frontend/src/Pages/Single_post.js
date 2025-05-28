@@ -34,8 +34,8 @@ function SinglePost() {
             <div className="col-lg-8 col-md-8">
               <div className="single-blog-item">
                 <img
-                  src={`http://localhost:5000/uploads/${
-                    post?.image || "default_blog_post_image.png"
+                  src={`${process.env.REACT_APP_URL}/uploads/${
+                    post?.image || `${process.env.REACT_APP_URL}/uploads/default_blog_post_image.png`
                   }`}
                   alt={post?.title || "No title available"}
                   className="img-fluid"
@@ -46,7 +46,6 @@ function SinglePost() {
                     {post?.title || "Untitled Post"}
                   </h2>
                   <p>{post?.content || "No content available."}</p>
-                  
                 </div>
               </div>
             </div>
@@ -54,7 +53,7 @@ function SinglePost() {
               <div className="sidebar-wrap">
                 <div className="sidebar-widget card border-0 mb-3 text-center">
                   <img
-                    src="http://localhost:5000/uploads/default.png"
+                    src={`${process.env.REACT_APP_URL}/uploads/default.png`}
                     alt="Blog Author"
                     className="img-fluid rounded mx-auto d-block"
                     style={{ width: "100px", height: "100px" }}
