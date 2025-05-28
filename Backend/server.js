@@ -55,11 +55,13 @@ app.use(cookieParser());
 
 // CORS Configuration
 const corsOptions = {
-  origin: [
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "http://localhost:3002",
-  ],
+  origin: environment === "production"
+    ? process.env.CORS_ORIGIN_PRODUCTION?.split(",") || []
+    : [
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "http://localhost:3002",
+      ],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   allowedHeaders: [
     "Content-Type",
