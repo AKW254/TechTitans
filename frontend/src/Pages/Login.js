@@ -1,48 +1,63 @@
 // The Login component handles user authentication by providing a form for users to input their email and password.
 // It interacts with Redux for state management and redirects authenticated users to the home page.
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../store/actions/authActions";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 const HOME_ROUTE = "/Home"; // Define route constant
 
+
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { error, isAuthenticated, loading } = useSelector(
-    (state) => state.auth
-  ); // Get auth state from Redux, including loading
+  const { error, isAuthenticated } = useSelector((state) => state.auth);
 
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
   });
 
+  // Used to track previous values
+  const prevError = useRef(null);
+  const prevAuth = useRef(false);
+
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
-  }; // Used in form inputs
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!credentials.email || !credentials.password) {
-      toast.error("Please fill in both email and password fields."); // Show validation error
+      toast.error("Please fill in both email and password fields.");
       return;
     }
-    dispatch(loginUser(credentials)); // Dispatch the login action
-  }; // Used in form submission
+    dispatch(loginUser(credentials));
+  };
 
   useEffect(() => {
-    if (error) {
-      toast.error(`Login failed: ${error}`); // Show error toast with context
+    // Show error toast only if error changes
+    if (
+      error &&
+      error !== prevError.current &&
+      credentials.email &&
+      credentials.password
+    ) {
+      toast.error(`Login failed: ${error}`);
     }
-    if (isAuthenticated) {
-      toast.success("Login successful!"); // Show success toast
-      navigate(HOME_ROUTE); // Redirect on successful login
+
+    // Show success toast only if isAuthenticated changes to true
+    if (isAuthenticated && isAuthenticated !== prevAuth.current) {
+      toast.success("Login successful!");
+      navigate(HOME_ROUTE);
     }
-  }, [error, isAuthenticated, navigate]); // Dependencies: error, isAuthenticated, navigate
+
+    // Update previous values
+    prevError.current = error;
+    prevAuth.current = isAuthenticated;
+  }, [error, isAuthenticated, navigate, credentials.email, credentials.password]);
 
   return (
     <>

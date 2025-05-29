@@ -1,13 +1,11 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../store/actions/authActions";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
-
+import { ROUTES } from "../constants/routes";
 
 function Register() {
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error, isAuthenticated } = useSelector(
@@ -18,7 +16,7 @@ function Register() {
     username: "",
     email: "",
     password: "",
-    confirmPassword: "", // Add confirm password field
+    confirmPassword: "",
   });
 
   const handleChange = (e) => {
@@ -42,13 +40,13 @@ function Register() {
     dispatch(registerUser(formData));
   };
 
-  React.useEffect(() => {
+ useEffect(() => {
     if (error) {
       toast.error(error);
     }
     if (isAuthenticated) {
-      toast.success("Registration successful!");;
-      navigate("/login"); // Redirect to login after successful registration
+      toast.success("Registration successful!");
+      navigate(ROUTES.LOGIN); // Redirect to login after successful registration
     }
   }, [error, isAuthenticated, navigate]);
 

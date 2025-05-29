@@ -63,7 +63,7 @@ const Header = () => {
                   <li className="nav-item">
                     <button
                       className="nav-link btn btn-link"
-                      onClick={() => handleNavigation("/Create Post")}
+                      onClick={() => handleNavigation("/Create-Post")}
                     >
                       Create Post
                     </button>
