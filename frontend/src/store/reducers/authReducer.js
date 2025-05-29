@@ -23,11 +23,21 @@ const initialState = {
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case REGISTER_REQUEST:
+return {
+  ...state,
+  loading: false,
+  error: null,
+};
     case LOGIN_REQUEST:
+      return {
+        ...state,
+        error: null,
+      };
     case PROFILE_UPDATE_REQUEST:
       return { ...state, loading: true, error: null };
 
     case REGISTER_SUCCESS:
+      
     case LOGIN_SUCCESS:
       return {
         ...state,

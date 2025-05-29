@@ -1,9 +1,9 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../store/actions/authActions";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { ROUTES } from "../constants/routes";
+
 
 function Register() {
   const dispatch = useDispatch();
@@ -12,7 +12,10 @@ function Register() {
     (state) => state.auth
   );
 
-  const [formData, setFormData] = useState({
+  const prevError = useRef(null);
+  const prevAuth = useRef(false);
+
+  const [userData, setuserData] = useState({
     username: "",
     email: "",
     password: "",
@@ -20,35 +23,62 @@ function Register() {
   });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setuserData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Basic client-side validation
-    if (formData.password !== formData.confirmPassword) {
+    if (userData.password !== userData.confirmPassword) {
       toast.error("Passwords do not match.");
-      return; // Stop submission
-    }
-
-    if (!formData.username || !formData.email || !formData.password) {
-      toast.error("Please fill in all fields.");
       return;
     }
 
-    dispatch(registerUser(formData));
+    const missingFields = [];
+    if (!userData.username) missingFields.push("Username");
+    if (!userData.email) missingFields.push("Email");
+    if (!userData.password) missingFields.push("Password");
+
+    if (missingFields.length > 0) {
+      toast.error(
+        `Please fill in the following fields: ${missingFields.join(", ")}`
+      );
+      return;
+    }
+
+    dispatch(registerUser(userData));
   };
 
- useEffect(() => {
-    if (error) {
-      toast.error(error);
+  useEffect(() => {
+    if (
+      error &&
+      error !== prevError.current &&
+      userData.username &&
+      userData.email &&
+      userData.password
+    ) {
+      toast.error(`Registration failed: ${error}`);
     }
-    if (isAuthenticated) {
+
+    if (isAuthenticated && isAuthenticated !== prevAuth.current) {
       toast.success("Registration successful!");
-      navigate(ROUTES.LOGIN); // Redirect to login after successful registration
+      navigate("/login"); // Redirect to login
     }
-  }, [error, isAuthenticated, navigate]);
+
+    // Update previous values
+    prevError.current = error;
+    prevAuth.current = isAuthenticated;
+  }, [
+    error,
+    isAuthenticated,
+    navigate,
+    userData.username,
+    userData.email,
+    userData.password,
+  ]);
 
   return (
     <div className="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
@@ -76,7 +106,7 @@ function Register() {
                     id="username"
                     name="username"
                     placeholder="Enter your username"
-                    value={formData.username}
+                    value={userData.username}
                     onChange={handleChange}
                     required
                   />
@@ -88,7 +118,7 @@ function Register() {
                     className="form-control"
                     id="email"
                     name="email"
-                    value={formData.email}
+                    value={userData.email}
                     onChange={handleChange}
                     required
                   />
@@ -100,7 +130,7 @@ function Register() {
                     className="form-control"
                     id="password"
                     name="password"
-                    value={formData.password}
+                    value={userData.password}
                     onChange={handleChange}
                     required
                   />
@@ -112,7 +142,7 @@ function Register() {
                     className="form-control"
                     id="confirmPassword"
                     name="confirmPassword"
-                    value={formData.confirmPassword}
+                    value={userData.confirmPassword}
                     onChange={handleChange}
                     required
                   />

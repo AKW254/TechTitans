@@ -13,7 +13,7 @@ function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { error, isAuthenticated } = useSelector((state) => state.auth);
+  const { loading,error, isAuthenticated } = useSelector((state) => state.auth);
 
   const [credentials, setCredentials] = useState({
     email: "",
