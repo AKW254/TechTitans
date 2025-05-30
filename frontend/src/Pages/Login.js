@@ -28,6 +28,8 @@ function Login() {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
+  const [didAttemptLogin, setDidAttemptLogin] = useState(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!credentials.email || !credentials.password) {
@@ -35,10 +37,10 @@ function Login() {
       return;
     }
     dispatch(loginUser(credentials));
+    setDidAttemptLogin(true); // <-- mark that we attempted login
   };
 
   useEffect(() => {
-    // Show error toast only if error changes
     if (
       error &&
       error !== prevError.current &&
@@ -48,16 +50,26 @@ function Login() {
       toast.error(`Login failed: ${error}`);
     }
 
-    // Show success toast only if isAuthenticated changes to true
-    if (isAuthenticated && isAuthenticated !== prevAuth.current) {
+    if (
+      didAttemptLogin && // Only navigate if this session attempted login
+      isAuthenticated &&
+      isAuthenticated !== prevAuth.current
+    ) {
       toast.success("Login successful!");
-      setTimeout(() => navigate(HOME_ROUTE), 100); // Delay navigation to ensure state updates
+      setTimeout(() => navigate(HOME_ROUTE), 100);
     }
 
-    // Update previous values
     prevError.current = error;
     prevAuth.current = isAuthenticated;
-  }, [error, isAuthenticated, navigate, credentials.email, credentials.password]);
+  }, [
+    error,
+    isAuthenticated,
+    navigate,
+    credentials.email,
+    credentials.password,
+    didAttemptLogin,
+  ]);
+
 
   return (
     <>
