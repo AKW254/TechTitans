@@ -118,6 +118,7 @@ function Register() {
                     className="form-control"
                     id="email"
                     name="email"
+                    placeholder="Enter your Email"
                     value={userData.email}
                     onChange={handleChange}
                     required
@@ -130,6 +131,7 @@ function Register() {
                     className="form-control"
                     id="password"
                     name="password"
+                    placeholder="Enter your Password"
                     value={userData.password}
                     onChange={handleChange}
                     required
@@ -142,6 +144,7 @@ function Register() {
                     className="form-control"
                     id="confirmPassword"
                     name="confirmPassword"
+                    placeholder="Enter your Confirm Password"
                     value={userData.confirmPassword}
                     onChange={handleChange}
                     required

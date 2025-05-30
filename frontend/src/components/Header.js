@@ -71,7 +71,7 @@ const Header = () => {
                   <li className="nav-item">
                     <button
                       className="nav-link btn btn-link"
-                      onClick={() => handleNavigation("/Manage Post")}
+                      onClick={() => handleNavigation("/Manage-Post")}
                     >
                       Manage Posts
                     </button>

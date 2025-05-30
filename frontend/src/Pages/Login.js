@@ -51,7 +51,7 @@ function Login() {
     // Show success toast only if isAuthenticated changes to true
     if (isAuthenticated && isAuthenticated !== prevAuth.current) {
       toast.success("Login successful!");
-      navigate(HOME_ROUTE);
+      setTimeout(() => navigate(HOME_ROUTE), 100); // Delay navigation to ensure state updates
     }
 
     // Update previous values
